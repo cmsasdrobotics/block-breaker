@@ -8,7 +8,6 @@ const BRICK_WIDTH = 60;
 const BRICK_HEIGHT = 20;
 const BRICK_GAP = 6;     // empty space between bricks
 const BRICKS_TOP = 50;   // how far down the first row starts
-const BRICK_HITS = 1;    // how many hits a brick takes before it breaks
 
 // Builds the list of bricks. Each brick is an object with an
 // x, y, width, and height.
@@ -25,8 +24,7 @@ function makeBricks() {
         x: left + col * (BRICK_WIDTH + BRICK_GAP),
         y: BRICKS_TOP + row * (BRICK_HEIGHT + BRICK_GAP),
         width: BRICK_WIDTH,
-        height: BRICK_HEIGHT,
-        hits: BRICK_HITS
+        height: BRICK_HEIGHT
       });
     }
   }
@@ -38,9 +36,6 @@ function makeBricks() {
 function drawBricks() {
   ctx.fillStyle = "white";
   for (const brick of bricks) {
-    if (brick.hits <= 0) {
-      continue;
-    }
     ctx.fillRect(brick.x, brick.y, brick.width, brick.height);
   }
 }
