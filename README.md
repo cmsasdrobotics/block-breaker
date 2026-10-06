@@ -13,21 +13,21 @@ Bricks are the obstacle you have to face, they slowly go down until they reach t
 You have to prevent that from happening.
 
 ### BRICK CLASSES
-- Default
+#### Default
   These bricks are regular bricks, without any mutations
   Doesn't Stack, Basic
-- Reinforcement
+#### Reinforcement
   Adds extra health to the bricks
   Stacks up infinitely
-- Quick 
+#### Quick 
   These bricks can go faster
   Stacks up to Quick IV
-- Gold
+#### Gold
   Gives extra money when destroyed
   Stacks up to Gold XV
-- Ghost
+#### Ghost
   Has the ability to hide for a bit, allowing the balls to phase through it without losing HP
   Stacks up to Ghost III
-- Giga
+#### Giga
   These bricks are the bosses, big with high hp
   Doesn't Stack, Giga
