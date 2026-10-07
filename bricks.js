@@ -9,6 +9,7 @@ const BRICK_HEIGHT = 20;
 const BRICK_GAP = 6;     // empty space between bricks
 const BRICKS_TOP = 50;   // how far down the first row starts
 const BRICK_HITS = 1;    // how many hits a brick takes before it breaks
+const BRICK_SPEED = 2;   // how fast bricks move downwards
 
 // Builds the list of bricks. Each brick is an object with an
 // x, y, width, and height.
@@ -32,6 +33,13 @@ function makeBricks() {
   }
 
   return list;
+}
+
+// Move all bricks downwards.
+function moveBricks() {
+  for (const brick of bricks) {
+    brick.y = brick.y + BRICK_SPEED;
+  }
 }
 
 // Draws every brick in the list.
