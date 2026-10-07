@@ -83,6 +83,7 @@ document.addEventListener("keyup", function (event) {
 function update() {
   movePaddle();
   moveBall();
+  moveBricks();
 
   bounceOffWalls();   // collisions.js
   bounceOffPaddle();  // collisions.js
