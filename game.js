@@ -19,7 +19,7 @@ const HEIGHT = canvas.height; // 450
 // the ball moves each update (vx = sideways, vy = up/down).
 // A positive vy means the ball is moving DOWN the screen.
 // ------------------------------------------------------------
-const BALL_SPEED = 8;
+const BALL_SPEED = 4;
 
 const ball = {
   x: 0,
