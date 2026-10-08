@@ -29,6 +29,19 @@ const WAVES = [
 
 let currentWave = 0;
 
+function startWave(index) {
+  currentWave = index;
+  bricks = makeBricks();
+}
+
+function nextWave() {
+  if (currentWave < WAVES.length - 1) {
+    startWave(currentWave + 1);
+  } else {
+    startWave(0);
+  }
+}
+
 // Builds the list of bricks from the current wave pattern.
 function makeBricks() {
   const list = [];
