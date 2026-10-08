@@ -9,7 +9,7 @@ const BRICK_HEIGHT = 20;
 const BRICK_GAP = 6;     // empty space between bricks
 const BRICKS_TOP = 50;   // how far down the first row starts
 const BRICK_HITS = 1;    // how many hits a brick takes before it breaks
-const BRICK_SPEED = 2;   // how fast bricks move downwards
+const BRICK_SPEED = 0.5;   // how fast bricks move downwards
 
 // Wave patterns. ` = brick, . = empty space.
 const WAVES = [
