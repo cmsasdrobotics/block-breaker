@@ -10,6 +10,10 @@ const BRICK_GAP = 6;     // empty space between bricks
 const BRICKS_TOP = 6;   // how far down the first row starts
 const BRICK_HITS = 1;    // how many hits a brick takes before it breaks
 const BRICK_SPEED = 0.5;   // how fast bricks move downwards
+const BRICK_RADIUS = 4;   // corner radius for rounded edges
+const BRICK_COLOR = "#606060";  // gray
+const BRICK_STROKE_COLOR = "#FFFFFF";  // white stroke
+const BRICK_STROKE_WIDTH = 1;
 
 // Wave patterns. ` = brick, . = empty space.
 const WAVES = [
@@ -76,13 +80,35 @@ function moveBricks() {
   }
 }
 
+// Draw a single brick with rounded edges and stroke
+function drawBrick(brick) {
+  ctx.fillStyle = BRICK_COLOR;
+  
+  // Draw rounded rectangle
+  ctx.beginPath();
+  ctx.moveTo(brick.x + BRICK_RADIUS, brick.y);
+  ctx.lineTo(brick.x + brick.width - BRICK_RADIUS, brick.y);
+  ctx.quadraticCurveTo(brick.x + brick.width, brick.y, brick.x + brick.width, brick.y + BRICK_RADIUS);
+  ctx.lineTo(brick.x + brick.width, brick.y + brick.height - BRICK_RADIUS);
+  ctx.quadraticCurveTo(brick.x + brick.width, brick.y + brick.height, brick.x + brick.width - BRICK_RADIUS, brick.y + brick.height);
+  ctx.lineTo(brick.x + BRICK_RADIUS, brick.y + brick.height);
+  ctx.quadraticCurveTo(brick.x, brick.y + brick.height, brick.x, brick.y + brick.height - BRICK_RADIUS);
+  ctx.lineTo(brick.x, brick.y + BRICK_RADIUS);
+  ctx.quadraticCurveTo(brick.x, brick.y, brick.x + BRICK_RADIUS, brick.y);
+  ctx.fill();
+  
+  // Add stroke
+  ctx.strokeStyle = BRICK_STROKE_COLOR;
+  ctx.lineWidth = BRICK_STROKE_WIDTH;
+  ctx.stroke();
+}
+
 // Draws every brick in the list.
 function drawBricks() {
-  ctx.fillStyle = "white";
   for (const brick of bricks) {
     if (brick.hits <= 0) {
       continue;
     }
-    ctx.fillRect(brick.x, brick.y, brick.width, brick.height);
+    drawBrick(brick);
   }
 }
