@@ -7,7 +7,7 @@ const BRICK_ROWS = 4;
 const BRICK_WIDTH = 60;
 const BRICK_HEIGHT = 20;
 const BRICK_GAP = 6;     // empty space between bricks
-const BRICKS_TOP = 50;   // how far down the first row starts
+const BRICKS_TOP = 6;   // how far down the first row starts
 const BRICK_HITS = 1;    // how many hits a brick takes before it breaks
 const BRICK_SPEED = 0.5;   // how fast bricks move downwards
 
