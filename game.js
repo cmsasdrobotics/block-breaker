@@ -13,6 +13,30 @@ const WIDTH = canvas.width;   // 600
 const HEIGHT = canvas.height; // 450
 
 
+// ============================================================
+// COLORS AND STYLING
+// ============================================================
+const PADDLE_COLOR = "#00D9FF";  // cyan
+const PADDLE_RADIUS = 6;
+const BALL_COLOR = "#FFFFFF";   // white
+const BALL_STROKE_COLOR = "#00D9FF";  // cyan stroke
+const BALL_STROKE_WIDTH = 2;
+
+
+// ============================================================
+// BACKGROUND
+// ============================================================
+function drawBackground() {
+  const gradient = ctx.createLinearGradient(0, 0, 0, HEIGHT);
+  gradient.addColorStop(0, "#0a1428");      // dark navy at top
+  gradient.addColorStop(0.5, "#1a2a4a");    // medium blue in middle
+  gradient.addColorStop(1, "#0d1f3c");      // darker blue at bottom
+  
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+}
+
+
 // ------------------------------------------------------------
 // THE BALL
 // x and y are the top-left corner. vx and vy are how many pixels
@@ -36,6 +60,38 @@ function resetBall() {
   ball.y = HEIGHT / 2 - ball.height / 2;
   ball.vx = BALL_SPEED;  // right
   ball.vy = BALL_SPEED;  // down
+}
+
+
+// ============================================================
+// DRAW BALL WITH STROKE
+// ============================================================
+function drawBall() {
+  ctx.fillStyle = BALL_COLOR;
+  ctx.fillRect(ball.x, ball.y, ball.width, ball.height);
+  
+  ctx.strokeStyle = BALL_STROKE_COLOR;
+  ctx.lineWidth = BALL_STROKE_WIDTH;
+  ctx.strokeRect(ball.x, ball.y, ball.width, ball.height);
+}
+
+
+// ============================================================
+// DRAW PADDLE WITH ROUNDED EDGES
+// ============================================================
+function drawPaddle() {
+  ctx.fillStyle = PADDLE_COLOR;
+  ctx.beginPath();
+  ctx.moveTo(paddle.x + PADDLE_RADIUS, paddle.y);
+  ctx.lineTo(paddle.x + paddle.width - PADDLE_RADIUS, paddle.y);
+  ctx.quadraticCurveTo(paddle.x + paddle.width, paddle.y, paddle.x + paddle.width, paddle.y + PADDLE_RADIUS);
+  ctx.lineTo(paddle.x + paddle.width, paddle.y + paddle.height - PADDLE_RADIUS);
+  ctx.quadraticCurveTo(paddle.x + paddle.width, paddle.y + paddle.height, paddle.x + paddle.width - PADDLE_RADIUS, paddle.y + paddle.height);
+  ctx.lineTo(paddle.x + PADDLE_RADIUS, paddle.y + paddle.height);
+  ctx.quadraticCurveTo(paddle.x, paddle.y + paddle.height, paddle.x, paddle.y + paddle.height - PADDLE_RADIUS);
+  ctx.lineTo(paddle.x, paddle.y + PADDLE_RADIUS);
+  ctx.quadraticCurveTo(paddle.x, paddle.y, paddle.x + PADDLE_RADIUS, paddle.y);
+  ctx.fill();
 }
 
 
@@ -123,28 +179,25 @@ function moveBall() {
 }
 
 
-// ------------------------------------------------------------
-// DRAW: paints everything on the canvas. Black background,
-// white shapes.
-// ------------------------------------------------------------
+// ============================================================
+// DRAW: paints everything on the canvas.
+// ============================================================
 function draw() {
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+  drawBackground();
 
-  ctx.fillStyle = "white";
-  ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
-  ctx.fillRect(ball.x, ball.y, ball.width, ball.height);
+  drawPaddle();
+  drawBall();
 
   drawBricks();  // bricks.js
 }
 
 
-// ------------------------------------------------------------
+// ============================================================
 // THE GAME LOOP
 // The browser calls frame() every time it is ready to draw.
 // Some screens are faster than others, so we make sure update()
 // always runs exactly 60 times per second on every computer.
-// ------------------------------------------------------------
+// ============================================================
 const STEP = 1000 / 60;
 let lastTime = 0;
 let leftover = 0;
