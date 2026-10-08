@@ -89,6 +89,11 @@ function update() {
   bounceOffPaddle();  // collisions.js
   bounceOffBricks();  // collisions.js
 
+  // All bricks destroyed, advance to next wave.
+  if (bricks.length === 0) {
+    nextWave();
+  }
+
   // The ball fell off the bottom: back to the center.
   if (ball.y > HEIGHT) {
     resetBall();
@@ -163,7 +168,7 @@ function frame(now) {
 }
 
 function start() {
-  bricks = makeBricks();  // bricks.js
+  startWave(0);
   resetBall();
   lastTime = performance.now();
   requestAnimationFrame(frame);
