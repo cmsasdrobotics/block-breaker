@@ -11,24 +11,45 @@ const BRICKS_TOP = 50;   // how far down the first row starts
 const BRICK_HITS = 1;    // how many hits a brick takes before it breaks
 const BRICK_SPEED = 2;   // how fast bricks move downwards
 
-// Builds the list of bricks. Each brick is an object with an
-// x, y, width, and height.
+// Wave patterns. ` = brick, . = empty space.
+const WAVES = [
+  [
+    ".`....`.",
+    "........",
+    "........",
+    "........"
+  ],
+  [
+    "..````..",
+    "........",
+    "........",
+    "........"
+  ]
+];
+
+let currentWave = 0;
+
+// Builds the list of bricks from the current wave pattern.
 function makeBricks() {
   const list = [];
+  const pattern = WAVES[currentWave];
 
-  // Center the whole block of bricks on the screen.
   const totalWidth = BRICK_COLUMNS * BRICK_WIDTH + (BRICK_COLUMNS - 1) * BRICK_GAP;
   const left = (WIDTH - totalWidth) / 2;
 
-  for (let row = 0; row < BRICK_ROWS; row++) {
-    for (let col = 0; col < BRICK_COLUMNS; col++) {
-      list.push({
-        x: left + col * (BRICK_WIDTH + BRICK_GAP),
-        y: BRICKS_TOP + row * (BRICK_HEIGHT + BRICK_GAP),
-        width: BRICK_WIDTH,
-        height: BRICK_HEIGHT,
-        hits: BRICK_HITS
-      });
+  for (let row = 0; row < pattern.length; row++) {
+    const rowPattern = pattern[row];
+    for (let col = 0; col < rowPattern.length; col++) {
+      if (rowPattern[col] === "`") {
+        list.push({
+          x: left + col * (BRICK_WIDTH + BRICK_GAP),
+          y: BRICKS_TOP + row * (BRICK_HEIGHT + BRICK_GAP),
+          width: BRICK_WIDTH,
+          height: BRICK_HEIGHT,
+          hits: BRICK_HITS,
+          mutations: []
+        });
+      }
     }
   }
 
