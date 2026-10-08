@@ -64,15 +64,21 @@ function resetBall() {
 
 
 // ============================================================
-// DRAW BALL WITH STROKE
+// DRAW BALL AS CIRCLE WITH STROKE
 // ============================================================
 function drawBall() {
+  const radius = ball.width / 2;
+  const centerX = ball.x + radius;
+  const centerY = ball.y + radius;
+  
   ctx.fillStyle = BALL_COLOR;
-  ctx.fillRect(ball.x, ball.y, ball.width, ball.height);
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+  ctx.fill();
   
   ctx.strokeStyle = BALL_STROKE_COLOR;
   ctx.lineWidth = BALL_STROKE_WIDTH;
-  ctx.strokeRect(ball.x, ball.y, ball.width, ball.height);
+  ctx.stroke();
 }
 
 
