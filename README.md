@@ -1,11 +1,11 @@
-# 🏓 BRICK DEFENSE
+# 🕹 BRICK DEFENSE 👾
 
 ## 👀 LORE
 You are a paddle who mercilessly murdered hundreds, even thousands of bricks with your ball.
 But now, the bricks are revolting, they are tired of being killed, and are now invading you.
 Defeat all the bricks with your upgrades and perks to win!
 
-## 🕹 CONTROLS
+## 🎮 CONTROLS
 A and D to move left and right (or arrow keys)
 
 # 🧱 BRICKS
