@@ -1,4 +1,4 @@
-# 🕹 BRICK DEFENSE 👾
+# 👾 BRICK DEFENSE 🕹
 
 ## 👀 LORE
 You are a paddle who mercilessly murdered hundreds, even thousands of bricks with your ball.
