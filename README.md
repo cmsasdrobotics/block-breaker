@@ -42,6 +42,10 @@ You have to prevent that from happening.
   Traps the balls temporarily disabling them until a certain amount of time
 
   Stacks up to Trap VI
+### 💣 Bomb
+  An explosive brick that can break any balls in it's range once broken
+
+  Stacks up to Bomb II
 ### 👹 Giga
   These bricks are the bosses, big with high hp
   
