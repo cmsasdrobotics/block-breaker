@@ -25,7 +25,7 @@ You have to prevent that from happening.
 ### 🚤 Quick 
   These bricks can go faster
   
-  Stacks up to Quick IV
+  Stacks up to Quick VII
 ### 🪙 Gold
   Gives extra money when destroyed
   
@@ -42,10 +42,14 @@ You have to prevent that from happening.
   Traps the balls temporarily disabling them until a certain amount of time
 
   Stacks up to Trap VI
-### 💣 Bomb
-  An explosive brick that can break any balls in it's range once broken
+### 💥 Explosive
+  An explosive brick that can break any balls in it's range once blown up
 
-  Stacks up to Bomb II
+  Stacks up to Explosive II
+### 🐜 Mini
+  A tiny brick making it harder for balls to hit
+
+  Stacks up to Mini IV
 ### 👹 Giga
   These bricks are the bosses, big with high hp
   
@@ -87,10 +91,14 @@ x#.# means cost multiplier after bought once
   Deals extra damage, good for high HP bricks
 
   $1500 x1.4
+### 💣 Splodey
+  Throws bombs at bricks with good crowd control
+
+  $2000 x1.45
 ### 🪐 Orbital
   Contains orbiting balls that can cause chaos
 
-  $2000 x1.35
+  $2500 x1.35
 ### 🫧 Duplicator
   A ball that can duplicate, scales exponentially
 
