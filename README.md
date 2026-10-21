@@ -87,7 +87,7 @@ x#.# means cost multiplier after bought once
   Beams a laser being deadly to bricks
 
   $750 x1.2
-### 🌀 Gravitron
+### 🌎 Gravitron
   Gets pulled into bricks to chip through
 
   $1000 x1.6
