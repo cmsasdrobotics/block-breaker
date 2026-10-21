@@ -45,11 +45,15 @@ You have to prevent that from happening.
 ### 💥 Explosive
   An explosive brick that can break any balls in it's range once blown up
 
-  Stacks up to Explosive II
+  Stacks up to Explosive III
 ### 🐜 Mini
   A tiny brick making it harder for balls to hit
 
   Stacks up to Mini IV
+### 🚧 Spike
+  A brick that can spike up breaking balls
+
+  Stacks up to Spike III
 ### 👹 Giga
   These bricks are the bosses, big with high hp
   
@@ -87,19 +91,23 @@ x#.# means cost multiplier after bought once
   Gets pulled into bricks to chip through
 
   $1000 x1.6
+### 🩹 Sticky
+  Sticks onto blocks to deal extra hits
+
+  $1500 x1.1
 ### 🪨 Slammy
   Deals extra damage, good for high HP bricks
 
-  $1500 x1.4
+  $2000 x1.4
 ### 💣 Splodey
   Throws bombs at bricks with good crowd control
 
-  $2000 x1.45
+  $2500 x1.45
 ### 🪐 Orbital
   Contains orbiting balls that can cause chaos
 
-  $2500 x1.35
+  $3000 x1.35
 ### 🫧 Duplicator
   A ball that can duplicate, scales exponentially
 
-  $3000 x2
+  $3500 x1.75
