@@ -71,7 +71,7 @@ x#.# means cost multiplier after bought once
   These balls are regular balls, without any mutations
 
   $10 x2.5 (caps at 4000)
-### ⏩ Speedy
+### ☄️ Speedy
   Can go very fast, but hard to control
 
   $100 x1.25
@@ -83,15 +83,15 @@ x#.# means cost multiplier after bought once
   Shoots drills that pierce through bricks
 
   $500 x1.5
-### 🔦 Laser
+### 🪩 Laser
   Beams a laser being deadly to bricks
 
   $750 x1.2
-### 🌎 Gravitron
+### 🌐 Gravitron
   Gets pulled into bricks to chip through
 
   $1000 x1.6
-### 🩹 Sticky
+### 🫟 Sticky
   Sticks onto blocks to deal extra hits
 
   $1500 x1.1
