@@ -64,13 +64,13 @@ Balls are what you use to break the bricks.
 
 Don't let them fall, then you would have no balls to defend the bricks!
 
-x#.# means cost multiplier after bought once
+x#.# means upgrade cost multiplier
 
 ## 🎲 BALL CLASSES
 ### ⚪ Default
   These balls are regular balls, without any mutations
 
-  $10 x2.5 (caps at 4000)
+  $10
 ### ☄️ Speedy
   Can go very fast, but hard to control
 
@@ -91,23 +91,35 @@ x#.# means cost multiplier after bought once
   Gets pulled into bricks to chip through
 
   $1000 x1.6
+### ⏩ Rapidfire
+  Turret shoots at a high frequency
+
+  $1250 x1.25
 ### 🫟 Sticky
   Sticks onto blocks to deal extra hits
 
   $1500 x1.1
+### 💦 Multishot
+  Shoots multiple balls at once
+
+  $1750 x1.85
 ### 🪨 Slammy
   Deals extra damage, good for high HP bricks
 
   $2000 x1.4
+### 🍄 Poison
+  Has a poison passive, when a brick is hit, the poison can spread to neighboring bricks
+
+  $2500 x1.55
 ### 💣 Splodey
   Throws bombs at bricks with good crowd control
 
-  $2500 x1.45
+  $3000 x1.45
 ### 🪐 Orbital
   Contains orbiting balls that can cause chaos
 
-  $3000 x1.35
+  $3500 x1.35
 ### 🫧 Duplicator
   A ball that can duplicate, scales exponentially
 
-  $3500 x1.75
+  $4000 x1.75
