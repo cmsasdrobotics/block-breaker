@@ -1,4 +1,3 @@
-/* Black and white only. */
 * {
   box-sizing: border-box;
 }
@@ -6,31 +5,87 @@
 body {
   margin: 0;
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow: hidden;
   background: #000;
   color: #fff;
   font-family: "Courier New", monospace;
 }
 
 main {
-  width: 100%;
-  max-width: 640px;
-  padding: 16px;
-  text-align: center;
-}
-
-canvas {
-  display: block;
-  width: 100%;
-  height: auto;
-  border: 2px solid #fff;
+  position: fixed;
+  inset: 0;
   background: #000;
 }
 
-p {
-  margin: 12px 0 0;
+canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+
+.game-hud {
+  position: absolute;
+  z-index: 1;
+  inset: 0 0 auto;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 18px;
+  border-bottom: 1px solid #454545;
+  background: #000;
+}
+
+.game-hud h1,
+.game-hud p {
+  margin: 0;
   font-size: 14px;
-  line-height: 1.5;
+  font-weight: 400;
+}
+
+.game-hud p {
+  color: #c5c5c5;
+}
+
+#fullscreen-button {
+  min-height: 32px;
+  margin-left: auto;
+  padding: 0 12px;
+  border: 1px solid #777;
+  border-radius: 2px;
+  background: #111;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+#fullscreen-button:hover,
+#fullscreen-button:focus-visible {
+  border-color: #fff;
+  outline: none;
+}
+
+main:fullscreen {
+  width: 100vw;
+  height: 100vh;
+}
+
+@media (max-width: 520px) {
+  .game-hud {
+    gap: 12px;
+    padding: 0 10px;
+  }
+
+  .game-hud h1,
+  .game-hud p {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .game-hud p {
+    display: none;
+  }
 }

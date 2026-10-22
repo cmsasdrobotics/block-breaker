@@ -19,7 +19,7 @@ function boxesTouch(a, b) {
 
 // The ball bounces off the left, right, and top walls.
 // (The bottom is not a wall: falling off the bottom resets the ball.)
-function bounceOffWalls() {
+function bounceOffWalls(ball) {
   if (ball.x < 0) {
     ball.x = 0;
     ball.vx = -ball.vx;
@@ -38,7 +38,7 @@ function bounceOffWalls() {
 // The ball bounces off the top of the paddle.
 // ball.vy > 0 means "the ball is moving down", so it only bounces
 // when it is falling onto the paddle.
-function bounceOffPaddle() {
+function bounceOffPaddle(ball) {
   if (boxesTouch(ball, paddle) && ball.vy > 0) {
     ball.y = paddle.y - ball.height;  // sit on top of the paddle
     ball.vy = -ball.vy;
@@ -48,7 +48,7 @@ function bounceOffPaddle() {
 
 // The ball bounces off the bricks. Each hit reduces the brick's health,
 // and broken bricks are removed from the list.
-function bounceOffBricks() {
+function bounceOffBricks(ball) {
   for (let i = 0; i < bricks.length; i++) {
     const brick = bricks[i];
 

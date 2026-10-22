@@ -11,6 +11,29 @@ const ctx = canvas.getContext("2d");
 
 const WIDTH = canvas.width;   // 600
 const HEIGHT = canvas.height; // 450
+const HUD_HEIGHT = 48;
+
+function resizeCanvas() {
+  const pixelRatio = window.devicePixelRatio || 1;
+  canvas.width = Math.round(window.innerWidth * pixelRatio);
+  canvas.height = Math.round(window.innerHeight * pixelRatio);
+}
+
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+const fullscreenButton = document.getElementById("fullscreen-button");
+fullscreenButton.addEventListener("click", async function () {
+  if (document.fullscreenElement) {
+    await document.exitFullscreen();
+  } else {
+    await document.querySelector("main").requestFullscreen();
+  }
+});
+
+document.addEventListener("fullscreenchange", function () {
+  fullscreenButton.textContent = document.fullscreenElement ? "Exit fullscreen" : "Fullscreen";
+});
 
 
 // ============================================================
@@ -44,29 +67,40 @@ function drawBackground() {
 // A positive vy means the ball is moving DOWN the screen.
 // ------------------------------------------------------------
 const BALL_SPEED = 4;
+const BALL_SIZE = 12;
+const BALL_FIRE_INTERVAL = 30;
+const TURRET_BARREL_LENGTH = 30;
+const TURRET_SWEEP = 0.75;
 
-const ball = {
-  x: 0,
-  y: 0,
-  width: 12,
-  height: 12,
-  vx: 0,
-  vy: 0
+const balls = [];
+let gameTick = 0;
+
+const turret = {
+  x: WIDTH / 2,
+  y: HEIGHT - 10,
+  angle: -Math.PI / 2,
+  cooldown: 12
 };
 
-// Put the ball in the center and reset its speed and direction.
-function resetBall() {
-  ball.x = WIDTH / 2 - ball.width / 2;
-  ball.y = HEIGHT / 2 - ball.height / 2;
-  ball.vx = BALL_SPEED;  // right
-  ball.vy = BALL_SPEED;  // down
+function launchBall() {
+  const centerX = turret.x + Math.cos(turret.angle) * TURRET_BARREL_LENGTH;
+  const centerY = turret.y + Math.sin(turret.angle) * TURRET_BARREL_LENGTH;
+
+  balls.push({
+    x: centerX - BALL_SIZE / 2,
+    y: centerY - BALL_SIZE / 2,
+    width: BALL_SIZE,
+    height: BALL_SIZE,
+    vx: Math.cos(turret.angle) * BALL_SPEED,
+    vy: Math.sin(turret.angle) * BALL_SPEED
+  });
 }
 
 
 // ============================================================
 // DRAW BALL AS CIRCLE WITH STROKE
 // ============================================================
-function drawBall() {
+function drawBall(ball) {
   const radius = ball.width / 2;
   const centerX = ball.x + radius;
   const centerY = ball.y + radius;
@@ -100,13 +134,37 @@ function drawPaddle() {
   ctx.fill();
 }
 
+function drawTurret() {
+  const barrelEndX = turret.x + Math.cos(turret.angle) * TURRET_BARREL_LENGTH;
+  const barrelEndY = turret.y + Math.sin(turret.angle) * TURRET_BARREL_LENGTH;
+
+  ctx.strokeStyle = PADDLE_COLOR;
+  ctx.lineWidth = 8;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(turret.x, turret.y);
+  ctx.lineTo(barrelEndX, barrelEndY);
+  ctx.stroke();
+
+  ctx.fillStyle = BALL_COLOR;
+  ctx.beginPath();
+  ctx.arc(turret.x, turret.y, 8, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = PADDLE_COLOR;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.fillStyle = PADDLE_COLOR;
+  ctx.fillRect(turret.x - 18, turret.y + 2, 36, 8);
+}
+
 
 // ------------------------------------------------------------
 // THE PADDLE
 // ------------------------------------------------------------
 const paddle = {
   x: WIDTH / 2 - 45,
-  y: HEIGHT - 30,
+  y: HEIGHT - 58,
   width: 90,
   height: 12,
   speed: 6
@@ -143,22 +201,36 @@ document.addEventListener("keyup", function (event) {
 // what they touched.
 // ------------------------------------------------------------
 function update() {
+  gameTick++;
+  moveTurret();
   movePaddle();
-  moveBall();
+  moveBalls();
   moveBricks();
 
-  bounceOffWalls();   // collisions.js
-  bounceOffPaddle();  // collisions.js
-  bounceOffBricks();  // collisions.js
+  for (let i = balls.length - 1; i >= 0; i--) {
+    const ball = balls[i];
+    bounceOffWalls(ball);   // collisions.js
+    bounceOffPaddle(ball);  // collisions.js
+    bounceOffBricks(ball);  // collisions.js
+
+    if (ball.y > HEIGHT) {
+      balls.splice(i, 1);
+    }
+  }
 
   // All bricks destroyed, advance to next wave.
   if (bricks.length === 0) {
     nextWave();
   }
 
-  // The ball fell off the bottom: back to the center.
-  if (ball.y > HEIGHT) {
-    resetBall();
+}
+
+function moveTurret() {
+  turret.angle = -Math.PI / 2 + Math.sin(gameTick * 0.035) * TURRET_SWEEP;
+  turret.cooldown--;
+  if (turret.cooldown <= 0) {
+    launchBall();
+    turret.cooldown = BALL_FIRE_INTERVAL;
   }
 }
 
@@ -179,9 +251,11 @@ function movePaddle() {
   }
 }
 
-function moveBall() {
-  ball.x = ball.x + ball.vx;
-  ball.y = ball.y + ball.vy;
+function moveBalls() {
+  for (const ball of balls) {
+    ball.x = ball.x + ball.vx;
+    ball.y = ball.y + ball.vy;
+  }
 }
 
 
@@ -189,10 +263,31 @@ function moveBall() {
 // DRAW: paints everything on the canvas.
 // ============================================================
 function draw() {
+  const pixelRatio = window.devicePixelRatio || 1;
+  const availableHeight = window.innerHeight - HUD_HEIGHT;
+  const scale = Math.min(window.innerWidth / WIDTH, availableHeight / HEIGHT);
+  const offsetX = (window.innerWidth - WIDTH * scale) / 2;
+  const offsetY = HUD_HEIGHT + (availableHeight - HEIGHT * scale) / 2;
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.setTransform(
+    pixelRatio * scale,
+    0,
+    0,
+    pixelRatio * scale,
+    pixelRatio * offsetX,
+    pixelRatio * offsetY
+  );
+
   drawBackground();
 
   drawPaddle();
-  drawBall();
+  drawTurret();
+  for (const ball of balls) {
+    drawBall(ball);
+  }
 
   drawBricks();  // bricks.js
 }
@@ -228,7 +323,6 @@ function frame(now) {
 
 function start() {
   startWave(0);
-  resetBall();
   lastTime = performance.now();
   requestAnimationFrame(frame);
 }

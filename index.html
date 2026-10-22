@@ -8,10 +8,12 @@
 </head>
 <body>
   <main>
-    <h1>Brick Defense</h1>
     <canvas id="game" width="600" height="450" aria-label="Block Breaker game"></canvas>
-    <p>Move the paddle with the left and right arrow keys, or A and D.</p>
-    <p>Don't let the bricks reach the bottom or you lose! Buy upgrades to get stronger.</p>
+    <header class="game-hud">
+      <h1>Brick Defense</h1>
+      <p>Move: Left / Right or A / D</p>
+      <button id="fullscreen-button" type="button">Fullscreen</button>
+    </header>
   </main>
 
   <!-- The order matters: game.js goes first because the other files use its settings. -->
