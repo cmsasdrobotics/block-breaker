@@ -75,14 +75,15 @@ const TURRET_SWEEP = 0.75;
 const balls = [];
 let gameTick = 0;
 
-const turret = {
-  x: WIDTH / 2,
-  y: HEIGHT - 10,
-  angle: -Math.PI / 2,
-  cooldown: 12
-};
+const turrets = [
+  { x: 20, y: HEIGHT - 10, minAngle: -Math.PI / 2, maxAngle: 0, angle: -Math.PI / 2, cooldown: 12 },
+  { x: WIDTH / 3, y: HEIGHT - 10, minAngle: -Math.PI / 2, maxAngle: -Math.PI / 2, angle: -Math.PI / 2, cooldown: 12 },
+  { x: WIDTH / 2, y: HEIGHT - 10, minAngle: -Math.PI / 2 - TURRET_SWEEP, maxAngle: -Math.PI / 2 + TURRET_SWEEP, angle: -Math.PI / 2, cooldown: 12 },
+  { x: WIDTH * 2 / 3, y: HEIGHT - 10, minAngle: -Math.PI / 2, maxAngle: -Math.PI / 2, angle: -Math.PI / 2, cooldown: 12 },
+  { x: WIDTH - 20, y: HEIGHT - 10, minAngle: -Math.PI, maxAngle: -Math.PI / 2, angle: -Math.PI / 2, cooldown: 12 }
+];
 
-function launchBall() {
+function launchBall(turret) {
   const centerX = turret.x + Math.cos(turret.angle) * TURRET_BARREL_LENGTH;
   const centerY = turret.y + Math.sin(turret.angle) * TURRET_BARREL_LENGTH;
 
@@ -134,7 +135,7 @@ function drawPaddle() {
   ctx.fill();
 }
 
-function drawTurret() {
+function drawTurret(turret) {
   const barrelEndX = turret.x + Math.cos(turret.angle) * TURRET_BARREL_LENGTH;
   const barrelEndY = turret.y + Math.sin(turret.angle) * TURRET_BARREL_LENGTH;
 
@@ -202,7 +203,7 @@ document.addEventListener("keyup", function (event) {
 // ------------------------------------------------------------
 function update() {
   gameTick++;
-  moveTurret();
+  moveTurrets();
   movePaddle();
   moveBalls();
   moveBricks();
@@ -225,12 +226,15 @@ function update() {
 
 }
 
-function moveTurret() {
-  turret.angle = -Math.PI / 2 + Math.sin(gameTick * 0.035) * TURRET_SWEEP;
-  turret.cooldown--;
-  if (turret.cooldown <= 0) {
-    launchBall();
-    turret.cooldown = BALL_FIRE_INTERVAL;
+function moveTurrets() {
+  for (const turret of turrets) {
+    const sweepPosition = (Math.sin(gameTick * 0.035) + 1) / 2;
+    turret.angle = turret.minAngle + sweepPosition * (turret.maxAngle - turret.minAngle);
+    turret.cooldown--;
+    if (turret.cooldown <= 0) {
+      launchBall(turret);
+      turret.cooldown = BALL_FIRE_INTERVAL;
+    }
   }
 }
 
@@ -284,7 +288,9 @@ function draw() {
   drawBackground();
 
   drawPaddle();
-  drawTurret();
+  for (const turret of turrets) {
+    drawTurret(turret);
+  }
   for (const ball of balls) {
     drawBall(ball);
   }
