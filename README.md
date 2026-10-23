@@ -54,6 +54,18 @@ You have to prevent that from happening.
   A brick that can spike up breaking balls
 
   Stacks up to Spike III
+### 🔫 Blaster
+  A brick that can shoot at the turret, temporaly disabling it
+
+  Stacks up to Blaster V
+### 🕺 Leader
+  A brick that gives a random mutation bonus to surrounding bricks until destroyed
+
+  Stacks up infinitely
+### 🕳 Teleporter
+  Can teleport surrounding bricks downwards
+
+  Stacks up to Teleporter III
 ### 👹 Giga
   These bricks are the bosses, big with high hp
   
@@ -71,6 +83,8 @@ x#.# means upgrade cost multiplier
   These balls are regular balls, without any mutations
 
   $10
+
+  Turret Prices: 1st FREE, 2nd $100, 3rd $300, 4th $1000, 5th $2000
 ### ☄️ Speedy
   Can go very fast, but hard to control
 
@@ -80,11 +94,11 @@ x#.# means upgrade cost multiplier
 
   $250 x1.3
 ### 🔻 Drilly
-  Shoots drills that pierce through bricks
+  Turrets shoot balls that shoots drills that pierce through bricks
 
   $500 x1.5
 ### 🪩 Laser
-  Beams a laser being deadly to bricks
+  Turrets shoot balls that beams a laser being deadly to bricks
 
   $750 x1.2
 ### 🌐 Gravitron
@@ -108,13 +122,17 @@ x#.# means upgrade cost multiplier
 
   $2000 x1.4
 ### 🍄 Poison
-  Has a poison passive, when a brick is hit, the poison can spread to neighboring bricks
+  When a brick is hit, it can spread to others
 
-  $2500 x1.55
+  $1750 x1.85
 ### 💣 Splodey
   Throws bombs at bricks with good crowd control
 
   $3000 x1.45
+### 💦 Multishot
+  Shoots multiple balls at once
+
+  $3000 x1.55
 ### 🪐 Orbital
   Contains orbiting balls that can cause chaos
 
