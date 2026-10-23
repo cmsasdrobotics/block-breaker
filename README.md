@@ -82,8 +82,6 @@ x#.# means upgrade cost multiplier
 ### ⚪ Default
   These balls are regular balls, without any mutations
 
-  $10
-
   Turret Prices: 1st FREE, 2nd $100, 3rd $300, 4th $1000, 5th $2000
 ### ☄️ Speedy
   Can go very fast, but hard to control
@@ -124,15 +122,11 @@ x#.# means upgrade cost multiplier
 ### 🍄 Poison
   When a brick is hit, it can spread to others
 
-  $1750 x1.85
+  $2500 x1.85
 ### 💣 Splodey
   Throws bombs at bricks with good crowd control
 
   $3000 x1.45
-### 💦 Multishot
-  Shoots multiple balls at once
-
-  $3000 x1.55
 ### 🪐 Orbital
   Contains orbiting balls that can cause chaos
 
