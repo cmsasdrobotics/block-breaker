@@ -71,16 +71,18 @@ const BALL_SIZE = 12;
 const BALL_FIRE_INTERVAL = 30;
 const TURRET_BARREL_LENGTH = 30;
 const TURRET_SWEEP = 0.75;
+const TURRET_EDGE_INSET = 20;
+const TURRET_SPACING = (WIDTH - TURRET_EDGE_INSET * 2) / 4;
 
 const balls = [];
 let gameTick = 0;
 
 const turrets = [
-  { x: 20, y: HEIGHT - 10, minAngle: -Math.PI / 2, maxAngle: 0, angle: -Math.PI / 2, cooldown: 12 },
-  { x: WIDTH / 3, y: HEIGHT - 10, minAngle: -Math.PI / 2, maxAngle: -Math.PI / 2, angle: -Math.PI / 2, cooldown: 12 },
-  { x: WIDTH / 2, y: HEIGHT - 10, minAngle: -Math.PI / 2 - TURRET_SWEEP, maxAngle: -Math.PI / 2 + TURRET_SWEEP, angle: -Math.PI / 2, cooldown: 12 },
-  { x: WIDTH * 2 / 3, y: HEIGHT - 10, minAngle: -Math.PI / 2, maxAngle: -Math.PI / 2, angle: -Math.PI / 2, cooldown: 12 },
-  { x: WIDTH - 20, y: HEIGHT - 10, minAngle: -Math.PI, maxAngle: -Math.PI / 2, angle: -Math.PI / 2, cooldown: 12 }
+  { x: TURRET_EDGE_INSET, y: HEIGHT - 10, sweepCenterDegrees: 45, sweepRangeDegrees: 45, angle: -Math.PI / 2, cooldown: 12 },
+  { x: TURRET_EDGE_INSET + TURRET_SPACING, y: HEIGHT - 10, sweepCenterDegrees: 22.5, sweepRangeDegrees: 45, angle: -Math.PI / 2, cooldown: 12 },
+  { x: WIDTH / 2, y: HEIGHT - 10, sweepCenterDegrees: 0, sweepRangeDegrees: TURRET_SWEEP * 180 / Math.PI, angle: -Math.PI / 2, cooldown: 12 },
+  { x: TURRET_EDGE_INSET + TURRET_SPACING * 3, y: HEIGHT - 10, sweepCenterDegrees: -22.5, sweepRangeDegrees: 45, angle: -Math.PI / 2, cooldown: 12 },
+  { x: WIDTH - TURRET_EDGE_INSET, y: HEIGHT - 10, sweepCenterDegrees: -45, sweepRangeDegrees: 45, angle: -Math.PI / 2, cooldown: 12 }
 ];
 
 function launchBall(turret) {
@@ -228,8 +230,8 @@ function update() {
 
 function moveTurrets() {
   for (const turret of turrets) {
-    const sweepPosition = (Math.sin(gameTick * 0.035) + 1) / 2;
-    turret.angle = turret.minAngle + sweepPosition * (turret.maxAngle - turret.minAngle);
+    const angleDegrees = turret.sweepCenterDegrees + Math.sin(gameTick * 0.035) * turret.sweepRangeDegrees;
+    turret.angle = (angleDegrees - 90) * Math.PI / 180;
     turret.cooldown--;
     if (turret.cooldown <= 0) {
       launchBall(turret);
