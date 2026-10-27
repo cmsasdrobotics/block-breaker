@@ -49,6 +49,11 @@ canvas {
   color: #c5c5c5;
 }
 
+.game-hud .hud-balance {
+  color: #00d9ff;
+  white-space: nowrap;
+}
+
 #fullscreen-button {
   min-height: 32px;
   margin-left: auto;
@@ -61,10 +66,270 @@ canvas {
   cursor: pointer;
 }
 
+#shop-button,
+#pause-button,
+#resume-button,
+#buy-turret-button {
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid #777;
+  border-radius: 2px;
+  background: #111;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+#shop-button:hover,
+#pause-button:hover,
+#resume-button:hover,
+#buy-turret-button:hover,
+#shop-button:focus-visible,
+#pause-button:focus-visible,
+#resume-button:focus-visible,
+#buy-turret-button:focus-visible {
+  border-color: #fff;
+  outline: none;
+}
+
+kbd {
+  margin-left: 4px;
+  color: #aaa;
+  font: inherit;
+  font-size: 11px;
+}
+
 #fullscreen-button:hover,
 #fullscreen-button:focus-visible {
   border-color: #fff;
   outline: none;
+}
+
+.shop-menu,
+.pause-menu {
+  position: absolute;
+  z-index: 2;
+  border: 1px solid #777;
+  background: #080d17;
+  color: #fff;
+}
+
+.shop-menu {
+  top: 64px;
+  right: 16px;
+  width: min(340px, calc(100vw - 32px));
+  max-height: calc(100vh - 80px);
+  overflow: auto;
+  padding: 16px;
+}
+
+.shop-menu h2,
+.pause-menu h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.shop-balance {
+  margin: 0 0 12px;
+  color: #00d9ff;
+}
+
+.turret-prices {
+  margin: 0 0 12px;
+  color: #aaa;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.turret-list {
+  display: grid;
+  gap: 6px;
+}
+
+.turret-option {
+  display: flex;
+  min-height: 38px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  border: 1px solid #454545;
+  border-radius: 2px;
+  background: #111824;
+  color: #fff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.turret-option[aria-pressed="true"] {
+  border-color: #00d9ff;
+}
+
+.turret-status {
+  color: #aaa;
+}
+
+.turret-purchase {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #454545;
+}
+
+.turret-upgrades h2,
+.turret-upgrades p,
+.turret-purchase p {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.turret-upgrades p,
+.turret-purchase p {
+  color: #aaa;
+}
+
+.turret-upgrades {
+  position: absolute;
+  z-index: 1;
+  bottom: 16px;
+  left: 16px;
+  width: min(300px, calc(100vw - 32px));
+  max-height: min(520px, calc(100vh - 80px));
+  overflow: auto;
+  padding: 14px;
+  border: 1px solid #777;
+  background: #080d17;
+  color: #fff;
+}
+
+.turret-upgrades h2 {
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.turret-upgrades p {
+  margin: 0;
+}
+
+.equipped-classes {
+  margin-bottom: 10px !important;
+  color: #00d9ff !important;
+}
+
+.ball-class-list {
+  display: grid;
+  max-height: 170px;
+  gap: 4px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  margin-bottom: 10px;
+}
+
+.ball-class-option {
+  display: flex;
+  min-height: 32px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 8px;
+  border: 1px solid #454545;
+  border-radius: 2px;
+  background: #111824;
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ball-class-option[aria-pressed="true"] {
+  border-color: #00d9ff;
+}
+
+.ball-class-option:disabled {
+  color: #777;
+  cursor: not-allowed;
+}
+
+.ball-class-option span:last-child {
+  color: #aaa;
+  white-space: nowrap;
+}
+
+.ball-class-description,
+.ball-class-price {
+  margin-bottom: 8px !important;
+  color: #aaa;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.class-actions,
+.fusion-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+#upgrade-class-button,
+#fusion-class-button,
+#confirm-fusion-button,
+#cancel-fusion-button {
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid #777;
+  border-radius: 2px;
+  background: #111;
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+#upgrade-class-button:disabled,
+#fusion-class-button:disabled,
+#confirm-fusion-button:disabled {
+  color: #777;
+  cursor: not-allowed;
+}
+
+.fusion-picker {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #454545;
+}
+
+.fusion-picker p {
+  flex-basis: 100%;
+  color: #aaa;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.class-action-status {
+  margin-top: 8px !important;
+  color: #aaa;
+  font-size: 12px;
+}
+
+#buy-turret-button:disabled {
+  color: #777;
+  cursor: not-allowed;
+}
+
+.pause-menu {
+  top: 50%;
+  left: 50%;
+  width: min(280px, calc(100vw - 32px));
+  padding: 20px;
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+[hidden] {
+  display: none !important;
 }
 
 main:fullscreen {
@@ -74,7 +339,7 @@ main:fullscreen {
 
 @media (max-width: 520px) {
   .game-hud {
-    gap: 12px;
+    gap: 8px;
     padding: 0 10px;
   }
 
@@ -82,10 +347,21 @@ main:fullscreen {
   .game-hud p {
     font-size: 12px;
   }
+
+  #shop-button,
+  #pause-button,
+  #fullscreen-button {
+    padding: 0 7px;
+    font-size: 11px;
+  }
 }
 
 @media (max-width: 380px) {
   .game-hud p {
     display: none;
+  }
+
+  .game-hud .hud-balance {
+    display: block;
   }
 }

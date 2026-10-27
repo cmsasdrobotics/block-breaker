@@ -12,8 +12,51 @@
     <header class="game-hud">
       <h1>Brick Defense</h1>
       <p>Move: Left / Right or A / D</p>
+      <p id="hud-balance" class="hud-balance">Cash: $0</p>
+      <button id="shop-button" type="button">Shop <kbd>E</kbd></button>
+      <button id="pause-button" type="button">Pause <kbd>Esc</kbd></button>
       <button id="fullscreen-button" type="button">Fullscreen</button>
     </header>
+
+    <section id="shop-menu" class="shop-menu" aria-label="Turret shop" hidden>
+      <h2>Turret Shop</h2>
+      <p id="shop-balance" class="shop-balance">Cash: $0</p>
+      <p class="turret-prices">Turret Prices: 1st FREE, 2nd $100, 3rd $300, 4th $1000, 5th $2000</p>
+      <div class="turret-list" aria-label="Select a turret">
+        <button class="turret-option" data-turret="0" type="button" aria-pressed="false"><span>1 · Turret</span><span class="turret-status"></span></button>
+        <button class="turret-option" data-turret="1" type="button" aria-pressed="false"><span>2 · Turret</span><span class="turret-status"></span></button>
+        <button class="turret-option" data-turret="2" type="button" aria-pressed="false"><span>3 · Turret</span><span class="turret-status"></span></button>
+        <button class="turret-option" data-turret="3" type="button" aria-pressed="false"><span>4 · Turret</span><span class="turret-status"></span></button>
+        <button class="turret-option" data-turret="4" type="button" aria-pressed="false"><span>5 · Turret</span><span class="turret-status"></span></button>
+      </div>
+      <div id="turret-purchase" class="turret-purchase" hidden>
+        <p id="purchase-description"></p>
+        <button id="buy-turret-button" type="button">Buy turret</button>
+      </div>
+    </section>
+
+    <section id="turret-upgrades" class="turret-upgrades" aria-label="Selected turret upgrades" hidden>
+      <h2>Turret <span id="selected-turret-number">1</span> Upgrades</h2>
+      <p id="equipped-classes" class="equipped-classes"></p>
+      <div id="ball-class-list" class="ball-class-list" aria-label="Ball classes"></div>
+      <p id="ball-class-description" class="ball-class-description"></p>
+      <p id="ball-class-price" class="ball-class-price"></p>
+      <div class="class-actions">
+        <button id="upgrade-class-button" type="button">Upgrade</button>
+        <button id="fusion-class-button" type="button">Fusion</button>
+      </div>
+      <div id="fusion-picker" class="fusion-picker" hidden>
+        <p id="fusion-description"></p>
+        <button id="confirm-fusion-button" type="button">Fuse classes</button>
+        <button id="cancel-fusion-button" type="button">Cancel</button>
+      </div>
+      <p id="class-action-status" class="class-action-status" aria-live="polite"></p>
+    </section>
+
+    <section id="pause-menu" class="pause-menu" aria-label="Pause menu" hidden>
+      <h2>Paused</h2>
+      <button id="resume-button" type="button">Resume</button>
+    </section>
   </main>
 
   <!-- The order matters: game.js goes first because the other files use its settings. -->

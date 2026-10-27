@@ -79,6 +79,8 @@ function bounceOffBricks(ball) {
     }
 
     brick.hits = brick.hits - 1;
+    money += 10;
+    renderShop();
 
     if (brick.hits <= 0) {
       bricks.splice(i, 1);
