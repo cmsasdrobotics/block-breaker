@@ -14,8 +14,13 @@ const BRICK_RADIUS = 4;   // corner radius for rounded edges
 const BRICK_COLOR = "#606060";  // gray
 const BRICK_STROKE_COLOR = "#FFFFFF";  // white stroke
 const BRICK_STROKE_WIDTH = 1;
+const BRICK_CLASSES = {
+  "`": { name: "Standard", hits: BRICK_HITS, speed: BRICK_SPEED, color: BRICK_COLOR },
+  "2": { name: "Reinforced I", hits: 2, speed: BRICK_SPEED, color: "#D99B2B" },
+  q: { name: "Quick I", hits: BRICK_HITS, speed: BRICK_SPEED * 2, color: "#43C6D9" }
+};
 
-// Wave patterns. ` = brick, . = empty space.
+// Wave patterns. ` = standard, 2 = Reinforced I, q = Quick I, . = empty space.
 const WAVES = [
   [
     ".`....`.",
@@ -26,6 +31,18 @@ const WAVES = [
   [
     "..````..",
     "........",
+    "........",
+    "........"
+  ],
+  [
+    "..2..2..",
+    "`..``..`",
+    "........",
+    "........"
+  ],
+  [
+    "..qqqq..",
+    "22....22",
     "........",
     "........"
   ]
@@ -57,16 +74,22 @@ function makeBricks() {
   for (let row = 0; row < pattern.length; row++) {
     const rowPattern = pattern[row];
     for (let col = 0; col < rowPattern.length; col++) {
-      if (rowPattern[col] === "`") {
-        list.push({
-          x: left + col * (BRICK_WIDTH + BRICK_GAP),
-          y: BRICKS_TOP + row * (BRICK_HEIGHT + BRICK_GAP),
-          width: BRICK_WIDTH,
-          height: BRICK_HEIGHT,
-          hits: BRICK_HITS,
-          mutations: []
-        });
+      const brickClass = BRICK_CLASSES[rowPattern[col]];
+      if (!brickClass) {
+        continue;
       }
+
+      list.push({
+        x: left + col * (BRICK_WIDTH + BRICK_GAP),
+        y: BRICKS_TOP + row * (BRICK_HEIGHT + BRICK_GAP),
+        width: BRICK_WIDTH,
+        height: BRICK_HEIGHT,
+        brickClass: brickClass.name,
+        hits: brickClass.hits,
+        speed: brickClass.speed,
+        color: brickClass.color,
+        mutations: []
+      });
     }
   }
 
@@ -76,13 +99,13 @@ function makeBricks() {
 // Move all bricks downwards.
 function moveBricks() {
   for (const brick of bricks) {
-    brick.y = brick.y + BRICK_SPEED;
+    brick.y = brick.y + brick.speed;
   }
 }
 
 // Draw a single brick with rounded edges and stroke
 function drawBrick(brick) {
-  ctx.fillStyle = BRICK_COLOR;
+  ctx.fillStyle = brick.color;
   
   // Draw rounded rectangle
   ctx.beginPath();
