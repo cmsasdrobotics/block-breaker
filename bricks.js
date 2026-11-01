@@ -11,13 +11,13 @@ const BRICKS_TOP = 6;   // how far down the first row starts
 const BRICK_HITS = 1;    // how many hits a brick takes before it breaks
 const BRICK_SPEED = 0.5;   // how fast bricks move downwards
 const BRICK_RADIUS = 4;   // corner radius for rounded edges
-const BRICK_COLOR = "#606060";  // gray
-const BRICK_STROKE_COLOR = "#FFFFFF";  // white stroke
+const BRICK_COLOR = "#FFFFFF";  // gray
+const BRICK_STROKE_COLOR = "#000000";  // white stroke
 const BRICK_STROKE_WIDTH = 1;
 const BRICK_CLASSES = {
   "`": { name: "Standard", hits: BRICK_HITS, speed: BRICK_SPEED, color: BRICK_COLOR },
-  "2": { name: "Reinforced I", hits: 2, speed: BRICK_SPEED, color: "#D99B2B" },
-  q: { name: "Quick I", hits: BRICK_HITS, speed: BRICK_SPEED * 2, color: "#43C6D9" }
+  "2": { name: "Reinforced I", hits: 2, speed: BRICK_SPEED, color: "#AAAAAA" },
+  q: { name: "Quick I", hits: BRICK_HITS, speed: BRICK_SPEED * 2, color: "#DBFFFF" }
 };
 
 // Wave patterns. ` = standard, 2 = Reinforced I, q = Quick I, . = empty space.
