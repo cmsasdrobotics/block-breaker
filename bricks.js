@@ -10,6 +10,7 @@ const BRICK_GAP = 6;     // empty space between bricks
 const BRICKS_TOP = 6;   // how far down the first row starts
 const BRICK_HITS = 1;    // how many hits a brick takes before it breaks
 const BRICK_SPEED = 0.5;   // how fast bricks move downwards
+const BRICK_SLIDE_SPEED = 3;
 const BRICK_RADIUS = 4;   // corner radius for rounded edges
 const BRICK_COLOR = "#FFFFFF";  // gray
 const BRICK_STROKE_COLOR = "#000000";  // white stroke
@@ -70,11 +71,15 @@ function nextWave() {
 }
 
 function stayStill(brick) {
-  return brick;
+  brick.y += brick.speed;
 }
 
 function slide(brick) {
-  brick.x = brick.startX + Math.sin(gameTick * brick.speed / 100) * 30;
+  brick.y += brick.speed;
+  brick.x += BRICK_SLIDE_SPEED;
+  if (brick.x > WIDTH) {
+    brick.x = -brick.width;
+  }
 }
 
 // Builds the list of bricks from the current wave pattern.
@@ -103,7 +108,7 @@ function makeBricks() {
         brickClass: brickClass.name,
         hits: brickClass.hits,
         move: isWaveFiveTopRow ? slide : stayStill,
-        speed: isWaveFiveTopRow ? 3 : brickClass.speed,
+        speed: brickClass.speed,
         startX: startX,
         color: brickClass.color,
         mutations: []
