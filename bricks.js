@@ -45,6 +45,12 @@ const WAVES = [
     "22....22",
     "........",
     "........"
+  ],
+  [
+    "..````..",
+    "........",
+    "........",
+    "........"
   ]
 ];
 
@@ -63,6 +69,14 @@ function nextWave() {
   }
 }
 
+function stayStill(brick) {
+  return brick;
+}
+
+function slide(brick) {
+  brick.x = brick.startX + Math.sin(gameTick * brick.speed / 100) * 30;
+}
+
 // Builds the list of bricks from the current wave pattern.
 function makeBricks() {
   const list = [];
@@ -79,14 +93,18 @@ function makeBricks() {
         continue;
       }
 
+      const startX = left + col * (BRICK_WIDTH + BRICK_GAP);
+      const isWaveFiveTopRow = currentWave === 4 && row === 0;
       list.push({
-        x: left + col * (BRICK_WIDTH + BRICK_GAP),
+        x: startX,
         y: BRICKS_TOP + row * (BRICK_HEIGHT + BRICK_GAP),
         width: BRICK_WIDTH,
         height: BRICK_HEIGHT,
         brickClass: brickClass.name,
         hits: brickClass.hits,
-        speed: brickClass.speed,
+        move: isWaveFiveTopRow ? slide : stayStill,
+        speed: isWaveFiveTopRow ? 3 : brickClass.speed,
+        startX: startX,
         color: brickClass.color,
         mutations: []
       });
@@ -94,13 +112,6 @@ function makeBricks() {
   }
 
   return list;
-}
-
-// Move all bricks downwards.
-function moveBricks() {
-  for (const brick of bricks) {
-    brick.y = brick.y + brick.speed;
-  }
 }
 
 // Draw a single brick with rounded edges and stroke

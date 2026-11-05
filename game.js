@@ -507,7 +507,9 @@ function update() {
   moveTurrets();
   movePaddle();
   moveBalls();
-  moveBricks();
+  for (const brick of bricks) {
+    brick.move(brick);
+  }
 
   for (let i = balls.length - 1; i >= 0; i--) {
     const ball = balls[i];
