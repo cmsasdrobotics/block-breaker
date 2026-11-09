@@ -67,7 +67,6 @@ document.addEventListener("fullscreenchange", function () {
 const PADDLE_COLOR = "#FFFFFF";  // white
 const OBJECT_OUTLINE_COLOR = "#000000";
 const PADDLE_RADIUS = 6;
-const BALL_COLOR = "#FFFFFF";   // white
 const BALL_STROKE_COLOR = OBJECT_OUTLINE_COLOR;
 const BALL_STROKE_WIDTH = 2;
 
@@ -112,20 +111,20 @@ const turrets = [
 ];
 const TURRET_PRICES = [0, 100, 300, 1000, 2000];
 const BALL_CLASSES = [
-  { id: "default", name: "Default", description: "Regular balls without mutations.", price: 0, multiplier: 1 },
-  { id: "speedy", name: "Speedy", description: "Fast balls that are harder to control.", price: 100, multiplier: 1.25 },
-  { id: "grower", name: "Grower", description: "Grows to have a higher chance of hitting bricks.", price: 250, multiplier: 1.3 },
-  { id: "drilly", name: "Drilly", description: "Shoots drills that pierce through bricks.", price: 500, multiplier: 1.5 },
-  { id: "laser", name: "Laser", description: "Beams a laser that is deadly to bricks.", price: 750, multiplier: 1.2 },
-  { id: "gravitron", name: "Gravitron", description: "Gets pulled into bricks to chip through.", price: 1000, multiplier: 1.6 },
-  { id: "rapidfire", name: "Rapidfire", description: "Turrets shoot at a higher frequency.", price: 1250, multiplier: 1.25 },
-  { id: "sticky", name: "Sticky", description: "Sticks onto blocks to deal extra hits.", price: 1500, multiplier: 1.1 },
-  { id: "multishot", name: "Multishot", description: "Shoots multiple balls at once.", price: 1750, multiplier: 1.85 },
-  { id: "slammy", name: "Slammy", description: "Deals extra damage to high-HP bricks.", price: 2000, multiplier: 1.4 },
-  { id: "poison", name: "Poison", description: "Can spread to nearby bricks when hit.", price: 2500, multiplier: 1.85 },
-  { id: "splodey", name: "Splodey", description: "Throws bombs for crowd control.", price: 3000, multiplier: 1.45 },
-  { id: "orbital", name: "Orbital", description: "Contains orbiting balls that cause chaos.", price: 3500, multiplier: 1.35 },
-  { id: "duplicator", name: "Duplicator", description: "Can duplicate and scale exponentially.", price: 4000, multiplier: 1.75 }
+  { id: "default", name: "Default", description: "Regular balls without mutations.", price: 0, multiplier: 1, color: "#FFFFFF" },
+  { id: "speedy", name: "Speedy", description: "Fast balls that are harder to control.", price: 100, multiplier: 1.25, color: "#FF0000" },
+  { id: "grower", name: "Grower", description: "Grows to have a higher chance of hitting bricks.", price: 250, multiplier: 1.3, color: "#00FF00" },
+  { id: "drilly", name: "Drilly", description: "Shoots drills that pierce through bricks.", price: 500, multiplier: 1.5, color: "#779900" },
+  { id: "laser", name: "Laser", description: "Beams a laser that is deadly to bricks.", price: 750, multiplier: 1.2, color: "#88FF00" },
+  { id: "gravitron", name: "Gravitron", description: "Gets pulled into bricks to chip through.", price: 1000, multiplier: 1.6, color: "#FFFF00" },
+  { id: "rapidfire", name: "Rapidfire", description: "Turrets shoot at a higher frequency.", price: 1250, multiplier: 1.25, color: "#FFFF88" },
+  { id: "sticky", name: "Sticky", description: "Sticks onto blocks to deal extra hits.", price: 1500, multiplier: 1.1, color: "#00FFFF" },
+  { id: "multishot", name: "Multishot", description: "Shoots multiple balls at once.", price: 1750, multiplier: 1.85, color: "#008800" },
+  { id: "slammy", name: "Slammy", description: "Deals extra damage to high-HP bricks.", price: 2000, multiplier: 1.4, color: "#CC8822" },
+  { id: "poison", name: "Poison", description: "Can spread to nearby bricks when hit.", price: 2500, multiplier: 1.85, color: "#8800FF" },
+  { id: "splodey", name: "Splodey", description: "Throws bombs for crowd control.", price: 3000, multiplier: 1.45, color: "#FF8800" },
+  { id: "orbital", name: "Orbital", description: "Contains orbiting balls that cause chaos.", price: 3500, multiplier: 1.35, color: "#228899" },
+  { id: "duplicator", name: "Duplicator", description: "Can duplicate and scale exponentially.", price: 4000, multiplier: 1.75, color: "#FF00FF" }
 ];
 const BALL_CLASS_BY_ID = Object.fromEntries(BALL_CLASSES.map((ballClass) => [ballClass.id, ballClass]));
 let money = 0;
@@ -363,6 +362,7 @@ function launchBall(turret) {
     vx: Math.cos(turret.angle) * BALL_SPEED,
     vy: Math.sin(turret.angle) * BALL_SPEED,
     ballClassIds: [...turret.ballClassIds],
+    color: BALL_CLASS_BY_ID[turret.ballClassIds[0]].color,
     classMultiplier: turret.ballMultiplier
   });
 }
@@ -376,7 +376,7 @@ function drawBall(ball) {
   const centerX = ball.x + radius;
   const centerY = ball.y + radius;
   
-  ctx.fillStyle = BALL_COLOR;
+  ctx.fillStyle = ball.color;
   ctx.beginPath();
   ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
   ctx.fill();
@@ -409,6 +409,7 @@ function drawPaddle() {
 }
 
 function drawTurret(turret) {
+  const turretColor = BALL_CLASS_BY_ID[turret.ballClassIds[0]].color;
   const barrelEndX = turret.x + Math.cos(turret.angle) * TURRET_BARREL_LENGTH;
   const barrelEndY = turret.y + Math.sin(turret.angle) * TURRET_BARREL_LENGTH;
 
@@ -419,11 +420,11 @@ function drawTurret(turret) {
   ctx.moveTo(turret.x, turret.y);
   ctx.lineTo(barrelEndX, barrelEndY);
   ctx.stroke();
-  ctx.strokeStyle = PADDLE_COLOR;
+  ctx.strokeStyle = turretColor;
   ctx.lineWidth = 7;
   ctx.stroke();
 
-  ctx.fillStyle = BALL_COLOR;
+  ctx.fillStyle = turretColor;
   ctx.beginPath();
   ctx.arc(turret.x, turret.y, 8, 0, Math.PI * 2);
   ctx.fill();
@@ -431,7 +432,7 @@ function drawTurret(turret) {
   ctx.lineWidth = 2;
   ctx.stroke();
 
-  ctx.fillStyle = PADDLE_COLOR;
+  ctx.fillStyle = turretColor;
   ctx.fillRect(turret.x - 18, turret.y + 2, 36, 8);
   ctx.strokeStyle = OBJECT_OUTLINE_COLOR;
   ctx.lineWidth = 2;
