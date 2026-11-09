@@ -115,7 +115,7 @@ const BALL_CLASSES = [
   { id: "speedy", name: "Speedy", description: "Fast balls that are harder to control.", price: 100, multiplier: 1.25, color: "#FF0000" },
   { id: "grower", name: "Grower", description: "Grows to have a higher chance of hitting bricks.", price: 250, multiplier: 1.3, color: "#00FF00" },
   { id: "drilly", name: "Drilly", description: "Shoots drills that pierce through bricks.", price: 500, multiplier: 1.5, color: "#779900" },
-  { id: "laser", name: "Laser", description: "Beams a laser that is deadly to bricks.", price: 750, multiplier: 1.2, color: "#00FF88" },
+  { id: "laser", name: "Laser", description: "Beams a laser that is deadly to bricks.", price: 750, multiplier: 1.2, color: "#0088FF" },
   { id: "gravitron", name: "Gravitron", description: "Gets pulled into bricks to chip through.", price: 1000, multiplier: 1.6, color: "#FFFF00" },
   { id: "rapidfire", name: "Rapidfire", description: "Turrets shoot at a higher frequency.", price: 1250, multiplier: 1.25, color: "#FFFF88" },
   { id: "sticky", name: "Sticky", description: "Sticks onto blocks to deal extra hits.", price: 1500, multiplier: 1.1, color: "#00FFFF" },
