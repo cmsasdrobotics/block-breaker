@@ -57,7 +57,7 @@ function bounceOffBricks(ball) {
   for (let i = 0; i < bricks.length; i++) {
     const brick = bricks[i];
 
-    if (brick.hits <= 0 || !boxesTouch(ball, brick)) {
+    if (brick.hits <= 0 || brick.ghostHidden || !boxesTouch(ball, brick)) {
       continue;
     }
 

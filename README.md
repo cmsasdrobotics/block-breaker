@@ -19,11 +19,11 @@ You have to prevent that from happening.
   
   Doesn't Stack, Basic
 ### 💪 Reinforcement
-  Adds extra health to the bricks
+  Adds extra health to the bricks. Higher HP bricks become darker, from 2 to 10 HP.
   
   Stacks up infinitely
 ### 🚤 Quick 
-  These bricks can go faster
+  These bricks can go faster and turn increasingly blue.
   
   Stacks up to Quick VII
 ### 🪙 Gold
@@ -31,7 +31,7 @@ You have to prevent that from happening.
   
   Stacks up to Gold XV
 ### 👻 Ghost
-  Has the ability to hide for a bit, allowing the balls to phase through it without losing HP
+  Fades out periodically, allowing balls to phase through while hidden.
   
   Stacks up to Ghost III
 ### 🧟 Necromancer
@@ -137,6 +137,6 @@ x#.# means upgrade cost multiplier
   $4000 x1.75
 
 ## 🔀 FUSIONS AND WAVES
-Fuse additional ball classes onto a turret to split each ball into equal color sections. The section order follows the order the classes were added, and you can keep fusing until every class is included.
+Fuse additional ball classes onto a turret to split each ball into equal color sections. Brick fusions also split their colors evenly. The section order follows the order the classes were added, and you can keep fusing until every class is included.
 
-After the handcrafted waves, new symmetric brick formations are generated at random and continue indefinitely.
+After the handcrafted waves, new brick formations with randomized layouts and classes are generated indefinitely.

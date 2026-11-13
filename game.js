@@ -98,7 +98,7 @@ const BALL_SPEED = 4;
 const BALL_SIZE = 12;
 const BALL_FIRE_INTERVAL = 30;
 const TURRET_BARREL_LENGTH = 30;
-const TURRET_SWEEP = 0.75;
+const TURRET_SWEEP_RANGE = 37.5;
 const TURRET_EDGE_INSET = 20;
 const TURRET_SPACING = (WIDTH - TURRET_EDGE_INSET * 2) / 4;
 
@@ -106,11 +106,11 @@ const balls = [];
 let gameTick = 0;
 
 const turrets = [
-  { x: TURRET_EDGE_INSET, y: HEIGHT - 10, sweepCenterDegrees: 45, sweepRangeDegrees: 45, angle: -Math.PI / 2, cooldown: 12, owned: true, ballClassIds: ["default"], ballMultiplier: 1 },
-  { x: TURRET_EDGE_INSET + TURRET_SPACING, y: HEIGHT - 10, sweepCenterDegrees: 22.5, sweepRangeDegrees: 45, angle: -Math.PI / 2, cooldown: 12, owned: false, ballClassIds: ["default"], ballMultiplier: 1 },
-  { x: WIDTH / 2, y: HEIGHT - 10, sweepCenterDegrees: 0, sweepRangeDegrees: TURRET_SWEEP * 180 / Math.PI, angle: -Math.PI / 2, cooldown: 12, owned: false, ballClassIds: ["default"], ballMultiplier: 1 },
-  { x: TURRET_EDGE_INSET + TURRET_SPACING * 3, y: HEIGHT - 10, sweepCenterDegrees: -22.5, sweepRangeDegrees: 45, angle: -Math.PI / 2, cooldown: 12, owned: false, ballClassIds: ["default"], ballMultiplier: 1 },
-  { x: WIDTH - TURRET_EDGE_INSET, y: HEIGHT - 10, sweepCenterDegrees: -45, sweepRangeDegrees: 45, angle: -Math.PI / 2, cooldown: 12, owned: false, ballClassIds: ["default"], ballMultiplier: 1 }
+  { x: TURRET_EDGE_INSET, y: HEIGHT - 10, sweepCenterDegrees: 45, sweepRangeDegrees: TURRET_SWEEP_RANGE, angle: -Math.PI / 2, cooldown: 12, owned: true, ballClassIds: ["default"], ballMultiplier: 1 },
+  { x: TURRET_EDGE_INSET + TURRET_SPACING, y: HEIGHT - 10, sweepCenterDegrees: 22.5, sweepRangeDegrees: TURRET_SWEEP_RANGE, angle: -Math.PI / 2, cooldown: 12, owned: false, ballClassIds: ["default"], ballMultiplier: 1 },
+  { x: WIDTH / 2, y: HEIGHT - 10, sweepCenterDegrees: 0, sweepRangeDegrees: TURRET_SWEEP_RANGE, angle: -Math.PI / 2, cooldown: 12, owned: false, ballClassIds: ["default"], ballMultiplier: 1 },
+  { x: TURRET_EDGE_INSET + TURRET_SPACING * 3, y: HEIGHT - 10, sweepCenterDegrees: -22.5, sweepRangeDegrees: TURRET_SWEEP_RANGE, angle: -Math.PI / 2, cooldown: 12, owned: false, ballClassIds: ["default"], ballMultiplier: 1 },
+  { x: WIDTH - TURRET_EDGE_INSET, y: HEIGHT - 10, sweepCenterDegrees: -45, sweepRangeDegrees: TURRET_SWEEP_RANGE, angle: -Math.PI / 2, cooldown: 12, owned: false, ballClassIds: ["default"], ballMultiplier: 1 }
 ];
 const TURRET_PRICES = [0, 100, 300, 1000, 2000];
 const BALL_CLASSES = [
@@ -463,7 +463,9 @@ function drawBall(ball) {
     ctx.closePath();
     ctx.fill();
   });
-  
+
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
   ctx.strokeStyle = BALL_STROKE_COLOR;
   ctx.lineWidth = BALL_STROKE_WIDTH;
   ctx.stroke();
@@ -605,6 +607,7 @@ function update() {
   advanceWaveFive();
   for (const brick of bricks) {
     brick.move(brick);
+    updateGhostBrick(brick);
   }
 
   for (let i = balls.length - 1; i >= 0; i--) {

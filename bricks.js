@@ -16,13 +16,33 @@ const BRICK_COLOR = "#FFFFFF";  // gray
 const BRICK_STROKE_COLOR = "#000000";  // white stroke
 const BRICK_STROKE_WIDTH = 1;
 const BRICK_CLASSES = {
-  "`": { name: "Standard", hits: BRICK_HITS, speed: BRICK_SPEED, color: BRICK_COLOR },
+  "`": { name: "Standard", hits: 1, speed: BRICK_SPEED, color: BRICK_COLOR },
   "2": { name: "Reinforced I", hits: 2, speed: BRICK_SPEED, color: "#AAAAAA" },
-  q: { name: "Quick I", hits: BRICK_HITS, speed: BRICK_SPEED * 2, color: "#DBFFFF" },
-  g: { name: "Gold I", hits: BRICK_HITS, speed: BRICK_SPEED, color: "#FFFFEF", reward: 50 }
+  "3": { name: "Reinforced III", hits: 3, speed: BRICK_SPEED, color: "#999999" },
+  "4": { name: "Reinforced IV", hits: 4, speed: BRICK_SPEED, color: "#888888" },
+  "5": { name: "Reinforced V", hits: 5, speed: BRICK_SPEED, color: "#777777" },
+  "6": { name: "Reinforced VI", hits: 6, speed: BRICK_SPEED, color: "#666666" },
+  "7": { name: "Reinforced VII", hits: 7, speed: BRICK_SPEED, color: "#555555" },
+  "8": { name: "Reinforced VIII", hits: 8, speed: BRICK_SPEED, color: "#444444" },
+  "9": { name: "Reinforced IX", hits: 9, speed: BRICK_SPEED, color: "#333333" },
+  "0": { name: "Reinforced X", hits: 10, speed: BRICK_SPEED, color: "#222222" },
+  q: { name: "Quick I", hits: 1, speed: BRICK_SPEED * 2, color: "#DBFFFF" },
+  w: { name: "Quick II", hits: 1, speed: BRICK_SPEED * 3, color: "#99DDFF" },
+  e: { name: "Quick III", hits: 1, speed: BRICK_SPEED * 4, color: "#66BBFF" },
+  r: { name: "Quick IV", hits: 1, speed: BRICK_SPEED * 5, color: "#3399FF" },
+  t: { name: "Quick V", hits: 1, speed: BRICK_SPEED * 6, color: "#0066FF" },
+  y: { name: "Quick VI", hits: 1, speed: BRICK_SPEED * 7, color: "#0033FF" },
+  u: { name: "Quick VII", hits: 1, speed: BRICK_SPEED * 8, color: "#0000FF" },
+  a: { name: "Ghost I", hits: 1, speed: BRICK_SPEED, color: "#FFFFFF", ghostLevel: 1 },
+  b: { name: "Ghost II", hits: 1, speed: BRICK_SPEED, color: "#FFFFFF", ghostLevel: 2 },
+  c: { name: "Ghost III", hits: 1, speed: BRICK_SPEED, color: "#FFFFFF", ghostLevel: 3 },
+  g: { name: "Gold I", hits: 1, speed: BRICK_SPEED, color: "#FFFFEF", reward: 50 },
+  f: { name: "Standard + Quick I", hits: 1, speed: BRICK_SPEED * 2, colors: ["#FFFFFF", "#DBFFFF"] },
+  h: { name: "Reinforced I + Gold I", hits: 2, speed: BRICK_SPEED, colors: ["#AAAAAA", "#FFFFEF"], reward: 60 },
+  j: { name: "Quick II + Ghost I", hits: 1, speed: BRICK_SPEED * 3, colors: ["#AADDFF", "#FFFFFF"], ghostLevel: 1 }
 };
 
-// Wave patterns. ` = standard, 2 = Reinforced I, q = Quick I, g = Gold I.
+// Wave patterns use single-character brick class IDs; . = empty space.
 const WAVES = [
   [
     ".`....`.",
@@ -37,19 +57,19 @@ const WAVES = [
     "........"
   ],
   [
-    "..2..2..",
+    "..3..3..",
     "`..``..`",
     "........",
     "........"
   ],
   [
-    "..qqqq..",
+    "..wwww..",
     "22....22",
     "........",
     "........"
   ],
   [
-    "..g``g..",
+    "..gfhg..",
     "........",
     "........",
     "........"
@@ -106,30 +126,34 @@ function advanceWaveFive() {
   }
 }
 
+function randomEndlessBrickType(waveNumber) {
+  const roll = Math.random();
+  if (roll < 0.08) return "g";
+  if (roll < 0.17) return ["a", "b", "c"][Math.min(2, Math.floor(Math.random() * (1 + waveNumber / 4)))];
+  if (roll < 0.29) return ["q", "w", "e", "r", "t", "y", "u"][Math.min(6, Math.floor(Math.random() * (1 + waveNumber / 2)))];
+  if (roll < 0.37) return ["f", "h", "j"][Math.floor(Math.random() * 3)];
+  if (roll < 0.57) return String(Math.min(10, 2 + Math.floor(Math.random() * Math.min(9, 1 + waveNumber / 2))) % 10);
+  return "`";
+}
+
 function generateEndlessWave(waveNumber) {
-  const formations = [
-    ["..####..", ".######.", "........", "........"],
-    [".#....#.", "########", "..####..", "........"],
-    ["...##...", "..####..", ".######.", "........"],
-    ["##....##", ".######.", "..####..", "........"]
-  ];
-  const formation = formations[Math.floor(Math.random() * formations.length)];
-  const goldChance = Math.min(0.08 + waveNumber * 0.015, 0.22);
+  const rowCount = 3 + Math.floor(Math.random() * 3);
+  const rows = [];
 
-  return formation.map((row) => {
-    const result = Array.from(row);
-    for (let col = 0; col < Math.ceil(row.length / 2); col++) {
-      if (row[col] !== "#") {
-        continue;
-      }
+  for (let row = 0; row < rowCount; row++) {
+    const pattern = Array(BRICK_COLUMNS).fill(".");
+    const count = 3 + Math.floor(Math.random() * 4);
+    const columns = Array.from({ length: BRICK_COLUMNS }, (_, index) => index)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, count);
 
-      const roll = Math.random();
-      const type = roll < goldChance ? "g" : roll < 0.23 ? "2" : roll < 0.36 ? "q" : "`";
-      result[col] = type;
-      result[row.length - 1 - col] = type;
+    for (const col of columns) {
+      pattern[col] = randomEndlessBrickType(waveNumber);
     }
-    return result.join("");
-  });
+    rows.push(pattern.join(""));
+  }
+
+  return rows;
 }
 
 // Builds the list of bricks from the current wave pattern.
@@ -162,8 +186,12 @@ function makeBricks() {
         move: isWaveFiveTopRow ? slide : stayStill,
         speed: brickClass.speed,
         startX: startX,
-        color: brickClass.color,
+        color: brickClass.color || brickClass.colors[0],
+        colors: brickClass.colors || [brickClass.color],
         reward: brickClass.reward || 10,
+        ghostLevel: brickClass.ghostLevel || 0,
+        ghostHidden: false,
+        ghostTimer: 90 + Math.random() * 45,
         mutations: []
       });
     }
@@ -174,22 +202,37 @@ function makeBricks() {
 
 // Draw a single brick with rounded edges and stroke
 function drawBrick(brick) {
-  ctx.fillStyle = brick.color;
-  
-  // Draw rounded rectangle
-  ctx.beginPath();
-  ctx.moveTo(brick.x + BRICK_RADIUS, brick.y);
-  ctx.lineTo(brick.x + brick.width - BRICK_RADIUS, brick.y);
-  ctx.quadraticCurveTo(brick.x + brick.width, brick.y, brick.x + brick.width, brick.y + BRICK_RADIUS);
-  ctx.lineTo(brick.x + brick.width, brick.y + brick.height - BRICK_RADIUS);
-  ctx.quadraticCurveTo(brick.x + brick.width, brick.y + brick.height, brick.x + brick.width - BRICK_RADIUS, brick.y + brick.height);
-  ctx.lineTo(brick.x + BRICK_RADIUS, brick.y + brick.height);
-  ctx.quadraticCurveTo(brick.x, brick.y + brick.height, brick.x, brick.y + brick.height - BRICK_RADIUS);
-  ctx.lineTo(brick.x, brick.y + BRICK_RADIUS);
-  ctx.quadraticCurveTo(brick.x, brick.y, brick.x + BRICK_RADIUS, brick.y);
-  ctx.fill();
-  
-  // Add stroke
+  ctx.save();
+  if (brick.ghostLevel) {
+    ctx.globalAlpha = brick.ghostHidden ? 0.08 : 0.72;
+  }
+
+  const drawShape = function () {
+    ctx.beginPath();
+    ctx.moveTo(brick.x + BRICK_RADIUS, brick.y);
+    ctx.lineTo(brick.x + brick.width - BRICK_RADIUS, brick.y);
+    ctx.quadraticCurveTo(brick.x + brick.width, brick.y, brick.x + brick.width, brick.y + BRICK_RADIUS);
+    ctx.lineTo(brick.x + brick.width, brick.y + brick.height - BRICK_RADIUS);
+    ctx.quadraticCurveTo(brick.x + brick.width, brick.y + brick.height, brick.x + brick.width - BRICK_RADIUS, brick.y + brick.height);
+    ctx.lineTo(brick.x + BRICK_RADIUS, brick.y + brick.height);
+    ctx.quadraticCurveTo(brick.x, brick.y + brick.height, brick.x, brick.y + brick.height - BRICK_RADIUS);
+    ctx.lineTo(brick.x, brick.y + BRICK_RADIUS);
+    ctx.quadraticCurveTo(brick.x, brick.y, brick.x + BRICK_RADIUS, brick.y);
+    ctx.closePath();
+  };
+
+  const colors = brick.colors || [brick.color];
+  drawShape();
+  ctx.save();
+  ctx.clip();
+  const segmentWidth = brick.width / colors.length;
+  colors.forEach((color, index) => {
+    ctx.fillStyle = color;
+    ctx.fillRect(brick.x + index * segmentWidth, brick.y, segmentWidth + 1, brick.height);
+  });
+  ctx.restore();
+
+  drawShape();
   ctx.strokeStyle = BRICK_STROKE_COLOR;
   ctx.lineWidth = BRICK_STROKE_WIDTH;
   ctx.stroke();
@@ -205,6 +248,21 @@ function drawBrick(brick) {
     ctx.fillStyle = "#182033";
     ctx.fillText(String(brick.hits), brick.x + brick.width / 2, brick.y + brick.height / 2);
     ctx.restore();
+  }
+  ctx.restore();
+}
+
+function updateGhostBrick(brick) {
+  if (!brick.ghostLevel) {
+    return;
+  }
+
+  brick.ghostTimer--;
+  if (brick.ghostTimer <= 0) {
+    brick.ghostHidden = !brick.ghostHidden;
+    brick.ghostTimer = brick.ghostHidden
+      ? 24 + brick.ghostLevel * 12
+      : 110 - brick.ghostLevel * 18;
   }
 }
 
