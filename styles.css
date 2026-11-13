@@ -25,6 +25,122 @@ canvas {
   height: 100vh;
 }
 
+.title-screen {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 42%, rgb(28 66 112 / 48%), transparent 58%),
+    linear-gradient(135deg, rgb(5 12 27 / 97%), rgb(7 20 39 / 94%));
+}
+
+.title-screen::before,
+.title-screen::after {
+  position: absolute;
+  width: 260px;
+  height: 100px;
+  border: 1px solid rgb(73 165 255 / 28%);
+  border-radius: 8px;
+  content: "";
+  transform: rotate(-24deg);
+  box-shadow: 0 0 38px rgb(0 174 255 / 12%), inset 0 0 30px rgb(0 174 255 / 8%);
+}
+
+.title-screen::before {
+  top: 14%;
+  left: -90px;
+}
+
+.title-screen::after {
+  right: -100px;
+  bottom: 12%;
+  transform: rotate(24deg);
+}
+
+.title-card {
+  position: relative;
+  z-index: 1;
+  width: min(620px, calc(100vw - 40px));
+  padding: clamp(26px, 6vw, 58px);
+  border: 1px solid rgb(117 190 255 / 35%);
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgb(11 27 51 / 92%), rgb(5 13 27 / 94%));
+  text-align: center;
+  box-shadow: 0 24px 90px rgb(0 0 0 / 45%), 0 0 50px rgb(0 139 255 / 10%);
+}
+
+.title-kicker,
+.title-controls {
+  color: #82bfff;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+}
+
+.title-card h1 {
+  margin: 18px 0;
+  color: #f3f8ff;
+  font-family: system-ui, sans-serif;
+  font-size: clamp(38px, 9vw, 76px);
+  font-weight: 900;
+  letter-spacing: -0.07em;
+  line-height: 0.95;
+  text-shadow: 0 0 34px rgb(33 163 255 / 22%);
+}
+
+.title-card h1 span {
+  display: block;
+  color: #42bdff;
+}
+
+.title-copy {
+  margin: 24px 0 30px;
+  color: #b6c8de;
+  font-size: clamp(12px, 2vw, 15px);
+  line-height: 1.6;
+}
+
+.play-button {
+  min-width: 190px;
+  min-height: 54px;
+  border: 1px solid #8ce2ff;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #1b9dd2, #1765c2);
+  color: #fff;
+  font: 700 16px "Courier New", monospace;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgb(0 145 255 / 28%);
+  transition: transform 140ms ease, filter 140ms ease, box-shadow 140ms ease;
+}
+
+.play-button:hover,
+.play-button:focus-visible {
+  outline: none;
+  filter: brightness(1.16);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 38px rgb(0 145 255 / 38%);
+}
+
+.play-button span {
+  margin-left: 12px;
+}
+
+.title-controls {
+  margin: 28px 0 0;
+  color: #8196b0;
+}
+
+.title-controls kbd {
+  margin: 0 3px 0 8px;
+  padding: 2px 5px;
+  border: 1px solid #45617e;
+  border-radius: 3px;
+  color: #d3eaff;
+}
+
 .game-hud {
   position: absolute;
   z-index: 1;
@@ -51,6 +167,11 @@ canvas {
 
 .game-hud .hud-balance {
   color: #00d9ff;
+  white-space: nowrap;
+}
+
+.game-hud .hud-wave {
+  color: #88cfff;
   white-space: nowrap;
 }
 
@@ -346,6 +467,11 @@ main:fullscreen {
   .game-hud h1,
   .game-hud p {
     font-size: 12px;
+  }
+
+  .title-kicker,
+  .title-controls {
+    font-size: 9px;
   }
 
   #shop-button,

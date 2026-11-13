@@ -9,9 +9,19 @@
 <body>
   <main>
     <canvas id="game" width="600" height="450" aria-label="Block Breaker game"></canvas>
+    <section id="title-screen" class="title-screen" aria-label="Title screen">
+      <div class="title-card">
+        <p class="title-kicker">A LITTLE ARCADE. A LOT OF BRICKS.</p>
+        <h1>BRICK <span>DEFENSE</span></h1>
+        <p class="title-copy">Build your defenses. Keep the ball in play. Hold the line.</p>
+        <button id="play-button" class="play-button" type="button">PLAY <span aria-hidden="true">→</span></button>
+        <p class="title-controls">MOVE WITH <kbd>A</kbd><kbd>D</kbd> OR <kbd>←</kbd><kbd>→</kbd></p>
+      </div>
+    </section>
     <header class="game-hud">
       <h1>Brick Defense</h1>
       <p>Move: Left / Right or A / D</p>
+      <p id="hud-wave" class="hud-wave">Wave 1</p>
       <p id="hud-balance" class="hud-balance">Cash: $0</p>
       <button id="shop-button" type="button">Shop <kbd>E</kbd></button>
       <button id="pause-button" type="button">Pause <kbd>Esc</kbd></button>

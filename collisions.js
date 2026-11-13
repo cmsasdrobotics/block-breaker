@@ -23,14 +23,17 @@ function bounceOffWalls(ball) {
   if (ball.x < 0) {
     ball.x = 0;
     ball.vx = -ball.vx;
+    playGameSound("wall");
   }
   if (ball.x + ball.width > WIDTH) {
     ball.x = WIDTH - ball.width;
     ball.vx = -ball.vx;
+    playGameSound("wall");
   }
   if (ball.y < 0) {
     ball.y = 0;
     ball.vy = -ball.vy;
+    playGameSound("wall");
   }
 }
 
@@ -42,6 +45,8 @@ function bounceOffPaddle(ball) {
   if (boxesTouch(ball, paddle) && ball.vy > 0) {
     ball.y = paddle.y - ball.height;  // sit on top of the paddle
     ball.vy = -ball.vy;
+    createPaddleParticles(ball.x + ball.width / 2, paddle.y);
+    playGameSound("paddle");
   }
 }
 
@@ -79,7 +84,8 @@ function bounceOffBricks(ball) {
     }
 
     brick.hits = brick.hits - 1;
-    money += 10;
+    money += brick.reward;
+    playGameSound("brick");
     renderShop();
 
     if (brick.hits <= 0) {

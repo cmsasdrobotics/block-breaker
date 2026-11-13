@@ -8,6 +8,8 @@
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
+const titleScreen = document.getElementById("title-screen");
+const playButton = document.getElementById("play-button");
 
 const WIDTH = canvas.width;   // 600
 const HEIGHT = canvas.height; // 450
@@ -30,6 +32,7 @@ const shopMenu = document.getElementById("shop-menu");
 const pauseMenu = document.getElementById("pause-menu");
 const shopBalance = document.getElementById("shop-balance");
 const hudBalance = document.getElementById("hud-balance");
+const hudWave = document.getElementById("hud-wave");
 const turretOptions = Array.from(document.querySelectorAll(".turret-option"));
 const turretUpgrades = document.getElementById("turret-upgrades");
 const selectedTurretNumber = document.getElementById("selected-turret-number");
@@ -128,16 +131,82 @@ const BALL_CLASSES = [
 ];
 const BALL_CLASS_BY_ID = Object.fromEntries(BALL_CLASSES.map((ballClass) => [ballClass.id, ballClass]));
 let money = 0;
+let gameStarted = false;
 let selectedTurretIndex = 0;
 let selectedBallClassId = "default";
 let selectedFusionClassId = null;
 let isChoosingFusion = false;
 let isShopOpen = false;
 let isPaused = false;
+let audioContext = null;
+let lastSoundAt = { wall: 0, brick: 0, paddle: 0 };
+const particles = [];
+let paddleImpact = 0;
+
+function startAudio() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) {
+    return;
+  }
+  if (!audioContext) {
+    audioContext = new AudioContextClass();
+  }
+  if (audioContext.state === "suspended") {
+    audioContext.resume();
+  }
+}
+
+function playGameSound(type) {
+  if (!audioContext || audioContext.state !== "running") {
+    return;
+  }
+
+  const now = audioContext.currentTime;
+  const minimumGap = type === "paddle" ? 0.045 : 0.035;
+  if (now - lastSoundAt[type] < minimumGap) {
+    return;
+  }
+  lastSoundAt[type] = now;
+
+  const settings = {
+    paddle: { frequency: 520, duration: 0.09, volume: 0.11, wave: "sine" },
+    brick: { frequency: 310, duration: 0.055, volume: 0.018, wave: "triangle" },
+    wall: { frequency: 210, duration: 0.045, volume: 0.012, wave: "sine" }
+  }[type];
+  const oscillator = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+  oscillator.type = settings.wave;
+  oscillator.frequency.setValueAtTime(settings.frequency, now);
+  oscillator.frequency.exponentialRampToValueAtTime(settings.frequency * 0.72, now + settings.duration);
+  gain.gain.setValueAtTime(settings.volume, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + settings.duration);
+  oscillator.connect(gain);
+  gain.connect(audioContext.destination);
+  oscillator.start(now);
+  oscillator.stop(now + settings.duration);
+}
+
+function createPaddleParticles(x, y) {
+  paddleImpact = 1;
+  for (let i = 0; i < 10; i++) {
+    const angle = Math.PI + Math.random() * Math.PI;
+    const speed = 1 + Math.random() * 3;
+    particles.push({
+      x,
+      y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      life: 18 + Math.random() * 12,
+      maxLife: 30,
+      size: 2 + Math.random() * 3
+    });
+  }
+}
 
 function renderShop() {
   shopBalance.textContent = `Cash: $${money}`;
   hudBalance.textContent = `Cash: $${money}`;
+  hudWave.textContent = `Wave ${currentWave + 1}`;
 
   for (const option of turretOptions) {
     const index = Number(option.dataset.turret);
@@ -176,22 +245,24 @@ function renderTurretUpgrades(turret) {
     const optionClassId = option.dataset.classId;
     const isSelected = isChoosingFusion ? optionClassId === selectedFusionClassId : optionClassId === selectedBallClassId;
     option.setAttribute("aria-pressed", String(isSelected));
-    option.disabled = isChoosingFusion && optionClassId === "default";
+    option.disabled = isChoosingFusion
+      && (optionClassId === "default" || turret.ballClassIds.includes(optionClassId));
   }
 
   const upgradePrice = Math.ceil(selectedClass.price * turret.ballMultiplier);
   upgradeClassButton.textContent = `Upgrade · $${upgradePrice}`;
   upgradeClassButton.disabled = isChoosingFusion || money < upgradePrice;
-  fusionClassButton.disabled = isChoosingFusion || turret.ballClassIds.length > 1 || selectedBallClassId !== firstClass.id;
+  fusionClassButton.disabled = isChoosingFusion || selectedBallClassId !== firstClass.id
+    || BALL_CLASSES.every((ballClass) => ballClass.id === "default" || turret.ballClassIds.includes(ballClass.id));
   fusionPicker.hidden = !isChoosingFusion;
 
   if (isChoosingFusion) {
     const secondClass = selectedFusionClassId ? BALL_CLASS_BY_ID[selectedFusionClassId] : null;
     const fusionPrice = getFusionPrice(firstClass, secondClass, turret);
     fusionDescription.textContent = secondClass
-      ? `Fuse ${firstClass.name} + ${secondClass.name} for $${fusionPrice}. Combined multiplier: x${(turret.ballMultiplier * secondClass.multiplier).toFixed(2)}.`
+      ? `Add ${secondClass.name} to the fusion for $${fusionPrice}. Colors are split evenly in purchase order. Combined multiplier: x${(turret.ballMultiplier * secondClass.multiplier).toFixed(2)}.`
       : `Choose a second class to fuse with ${firstClass.name}.`;
-    confirmFusionButton.disabled = !secondClass || money < fusionPrice;
+    confirmFusionButton.disabled = !secondClass || turret.ballClassIds.includes(selectedFusionClassId) || money < fusionPrice;
     confirmFusionButton.textContent = secondClass ? `Fuse · $${fusionPrice}` : "Fuse classes";
   }
 }
@@ -224,7 +295,7 @@ function createBallClassOptions() {
 
     option.addEventListener("click", function () {
       if (isChoosingFusion) {
-        if (ballClass.id !== "default") {
+        if (ballClass.id !== "default" && !turrets[selectedTurretIndex].ballClassIds.includes(ballClass.id)) {
           selectedFusionClassId = ballClass.id;
         }
       } else {
@@ -281,7 +352,7 @@ function upgradeSelectedTurretClass() {
 function beginTurretFusion() {
   isChoosingFusion = true;
   selectedFusionClassId = null;
-  classActionStatus.textContent = "Select a second class to fuse.";
+  classActionStatus.textContent = "Select another class to add to the fusion.";
   renderShop();
 }
 
@@ -296,10 +367,10 @@ function fuseSelectedTurretClasses() {
   }
 
   money -= price;
-  turret.ballClassIds = [firstClass.id, secondClass.id];
+  turret.ballClassIds = [...turret.ballClassIds, secondClass.id];
   turret.ballMultiplier *= secondClass.multiplier;
   isChoosingFusion = false;
-  classActionStatus.textContent = `${firstClass.name} + ${secondClass.name} fused.`;
+  classActionStatus.textContent = `${turret.ballClassIds.map((id) => BALL_CLASS_BY_ID[id].name).join(" + ")} fused.`;
   renderShop();
 }
 
@@ -322,6 +393,12 @@ function resumeGame() {
   isPaused = false;
   pauseMenu.hidden = true;
 }
+
+playButton.addEventListener("click", function () {
+  gameStarted = true;
+  titleScreen.hidden = true;
+  startAudio();
+});
 
 shopButton.addEventListener("click", function () {
   if (isShopOpen) {
@@ -362,6 +439,7 @@ function launchBall(turret) {
     vx: Math.cos(turret.angle) * BALL_SPEED,
     vy: Math.sin(turret.angle) * BALL_SPEED,
     ballClassIds: [...turret.ballClassIds],
+    colors: turret.ballClassIds.map((id) => BALL_CLASS_BY_ID[id].color),
     color: BALL_CLASS_BY_ID[turret.ballClassIds[0]].color,
     classMultiplier: turret.ballMultiplier
   });
@@ -376,10 +454,15 @@ function drawBall(ball) {
   const centerX = ball.x + radius;
   const centerY = ball.y + radius;
   
-  ctx.fillStyle = ball.color;
-  ctx.beginPath();
-  ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-  ctx.fill();
+  const colors = ball.colors || [ball.color];
+  colors.forEach((color, index) => {
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.arc(centerX, centerY, radius, -Math.PI / 2 + index * Math.PI * 2 / colors.length, -Math.PI / 2 + (index + 1) * Math.PI * 2 / colors.length);
+    ctx.closePath();
+    ctx.fill();
+  });
   
   ctx.strokeStyle = BALL_STROKE_COLOR;
   ctx.lineWidth = BALL_STROKE_WIDTH;
@@ -391,7 +474,7 @@ function drawBall(ball) {
 // DRAW PADDLE WITH ROUNDED EDGES
 // ============================================================
 function drawPaddle() {
-  ctx.fillStyle = PADDLE_COLOR;
+  ctx.fillStyle = paddleImpact > 0 ? "#8ce2ff" : PADDLE_COLOR;
   ctx.beginPath();
   ctx.moveTo(paddle.x + PADDLE_RADIUS, paddle.y);
   ctx.lineTo(paddle.x + paddle.width - PADDLE_RADIUS, paddle.y);
@@ -500,14 +583,26 @@ document.addEventListener("keyup", function (event) {
 // what they touched.
 // ------------------------------------------------------------
 function update() {
-  if (isPaused || isShopOpen) {
+  if (!gameStarted || isPaused || isShopOpen) {
     return;
   }
 
   gameTick++;
+  paddleImpact = Math.max(0, paddleImpact - 0.08);
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const particle = particles[i];
+    particle.x += particle.vx;
+    particle.y += particle.vy;
+    particle.vy += 0.035;
+    particle.life--;
+    if (particle.life <= 0) {
+      particles.splice(i, 1);
+    }
+  }
   moveTurrets();
   movePaddle();
   moveBalls();
+  advanceWaveFive();
   for (const brick of bricks) {
     brick.move(brick);
   }
@@ -526,6 +621,7 @@ function update() {
   // All bricks destroyed, advance to next wave.
   if (bricks.length === 0) {
     nextWave();
+    renderShop();
   }
 
 }
@@ -596,6 +692,14 @@ function draw() {
   drawBackground();
 
   drawPaddle();
+  for (const particle of particles) {
+    ctx.globalAlpha = Math.max(0, particle.life / particle.maxLife);
+    ctx.fillStyle = "#75dcff";
+    ctx.beginPath();
+    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
   for (const turret of turrets) {
     if (turret.owned) {
       drawTurret(turret);

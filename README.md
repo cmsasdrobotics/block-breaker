@@ -27,7 +27,7 @@ You have to prevent that from happening.
   
   Stacks up to Quick VII
 ### 🪙 Gold
-  Gives extra money when destroyed
+  Gold I bricks (#FFFFEF) give extra money when hit
   
   Stacks up to Gold XV
 ### 👻 Ghost
@@ -135,3 +135,8 @@ x#.# means upgrade cost multiplier
   A ball that can duplicate, scales exponentially
 
   $4000 x1.75
+
+## 🔀 FUSIONS AND WAVES
+Fuse additional ball classes onto a turret to split each ball into equal color sections. The section order follows the order the classes were added, and you can keep fusing until every class is included.
+
+After the handcrafted waves, new symmetric brick formations are generated at random and continue indefinitely.
