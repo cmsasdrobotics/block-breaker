@@ -89,6 +89,12 @@ function bounceOffBricks(ball) {
     renderShop();
 
     if (brick.hits <= 0) {
+      createBrickParticles(
+        brick.x + brick.width / 2,
+        brick.y + brick.height / 2,
+        brick.colors || [brick.color]
+      );
+      playGameSound("break");
       bricks.splice(i, 1);
     }
 

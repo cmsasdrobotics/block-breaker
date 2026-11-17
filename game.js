@@ -139,7 +139,7 @@ let isChoosingFusion = false;
 let isShopOpen = false;
 let isPaused = false;
 let audioContext = null;
-let lastSoundAt = { wall: 0, brick: 0, paddle: 0 };
+let lastSoundAt = { wall: 0, brick: 0, break: 0, paddle: 0 };
 const particles = [];
 let paddleImpact = 0;
 
@@ -171,6 +171,7 @@ function playGameSound(type) {
   const settings = {
     paddle: { frequency: 520, duration: 0.09, volume: 0.11, wave: "sine" },
     brick: { frequency: 310, duration: 0.055, volume: 0.018, wave: "triangle" },
+    break: { frequency: 440, duration: 0.12, volume: 0.07, wave: "triangle" },
     wall: { frequency: 210, duration: 0.045, volume: 0.012, wave: "sine" }
   }[type];
   const oscillator = audioContext.createOscillator();
@@ -199,6 +200,23 @@ function createPaddleParticles(x, y) {
       life: 18 + Math.random() * 12,
       maxLife: 30,
       size: 2 + Math.random() * 3
+    });
+  }
+}
+
+function createBrickParticles(x, y, colors) {
+  for (let i = 0; i < 14; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 1 + Math.random() * 3;
+    particles.push({
+      x,
+      y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      life: 22 + Math.random() * 14,
+      maxLife: 36,
+      size: 2 + Math.random() * 2,
+      color: colors[Math.floor(Math.random() * colors.length)]
     });
   }
 }
@@ -697,7 +715,7 @@ function draw() {
   drawPaddle();
   for (const particle of particles) {
     ctx.globalAlpha = Math.max(0, particle.life / particle.maxLife);
-    ctx.fillStyle = "#75dcff";
+    ctx.fillStyle = particle.color || "#75dcff";
     ctx.beginPath();
     ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
     ctx.fill();
